@@ -1,0 +1,81 @@
+<?php
+
+namespace PoiBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Users
+ *
+ * @ORM\Table(name="users", uniqueConstraints={@ORM\UniqueConstraint(name="Username_UNIQUE", columns={"Username"}), @ORM\UniqueConstraint(name="Nickname_UNIQUE", columns={"Nickname"})})
+ * @ORM\Entity
+ */
+class Users
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="Id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Nickname", type="string", length=30, nullable=false)
+     */
+    private $nickname;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Email", type="string", length=50, nullable=false)
+     */
+    private $email;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Phone", type="string", length=15, nullable=true)
+     */
+    private $phone;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Username", type="string", length=30, nullable=false)
+     */
+    private $username;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Password", type="string", length=255, nullable=false)
+     */
+    private $password;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="CreationDate", type="datetime", nullable=false)
+     */
+    private $creationdate;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="FirstLogin", type="boolean", nullable=false)
+     */
+    private $firstlogin;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="Unblocked", type="boolean", nullable=false)
+     */
+    private $unblocked;
+
+
+}

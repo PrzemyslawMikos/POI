@@ -1,0 +1,24 @@
+ratings_index:
+    path:     /
+    defaults: { _controller: "PoiBundle:Ratings:index" }
+    methods:  GET
+
+ratings_show:
+    path:     /{id}/show
+    defaults: { _controller: "PoiBundle:Ratings:show" }
+    methods:  GET
+
+ratings_new:
+    path:     /new
+    defaults: { _controller: "PoiBundle:Ratings:new" }
+    methods:  [GET, POST]
+
+ratings_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "PoiBundle:Ratings:edit" }
+    methods:  [GET, POST]
+
+ratings_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "PoiBundle:Ratings:delete" }
+    methods:  DELETE

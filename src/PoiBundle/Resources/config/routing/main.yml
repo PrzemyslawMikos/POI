@@ -1,0 +1,9 @@
+main_ajax:
+    path:     /ajax
+    defaults: { _controller: "PoiBundle:Main:ajax" }
+    methods:  GET
+
+main_index:
+    path:     /
+    defaults: { _controller: "PoiBundle:Main:index" }
+    methods:  GET

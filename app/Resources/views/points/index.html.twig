@@ -1,0 +1,166 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h2 class="page-header"><i class="fa fa-list fa-fw"></i> All Points</h2>
+        </div>
+    </div>
+    {% for flash_message in app.session.flashBag.get('error') %}
+        {% include 'flash/error.html.twig' %}
+    {% endfor %}
+    {% for flash_message in app.session.flashBag.get('success') %}
+        {% include 'flash/success.html.twig' %}
+    {% endfor %}
+    <div class="row">
+        <div class="table-responsive view-table">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Id</th>
+                    <th>User</th>
+                    <th>Name</th>
+                    <th>Longitude</th>
+                    <th>Latitude</th>
+                    <th>Added date</th>
+                    <th>Accepted by</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for point in points %}
+                    {% if point.unblocked and point.accepted %}
+                        <tr class="success">
+                    {% elseif point.unblocked and not point.accepted %}
+                        <tr class="warning">
+                    {% else %}
+                        <tr class="danger">
+                    {% endif %}
+                    <td>
+                        {% if point.unblocked and point.accepted %}
+                            <i class="fa fa-check fa-fw"></i> Active
+                        {% elseif point.unblocked and not point.accepted %}
+                            <i class="fa fa-level-up fa-fw"></i> To promote
+                        {% else %}
+                            <i class="fa fa-ban fa-fw"></i> Blocked
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ point.id }}
+                    </td>
+                    <td>
+                        <a href="{{ path('users_show', { 'id': point.user.id}) }}">{{ point.user.nickname }}</a>
+                    </td>
+                    <td>
+                        {{ point.name }}
+                    </td>
+                    <td>
+                        {{ point.longitude }}
+                    </td>
+                    <td>
+                        {{ point.latitude }}
+                    </td>
+                    <td>
+                        {{ point.addeddate|date('Y-m-d, H:i:s') }}
+                    </td>
+                    <td>
+                        {% if point.accept != null %}
+                            <a href="{{ path('administrators_show', { 'id': point.accept.id}) }}">{{ point.accept.firstname }} {{ point.accept.lastname }}</a>
+                        {% else %}
+                            None
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if point.unblocked and not point.accepted %}
+                            {# TODO change link of promote to points_promote action!#}
+                            <a href="{{ path('points_show', { 'id': point.id }) }}"><button type="button" class="btn btn-xs btn-default action-btn"><i class="fa fa-level-up"></i></button></a>
+                        {% else %}
+                            <a href="{{ path('points_show', { 'id': point.id }) }}"><button type="button" class="btn btn-xs btn-default action-btn"><i class="fa fa-archive"></i></button></a>
+                            <a href="{{ path('points_edit', { 'id': point.id }) }}"><button type="button" class="btn btn-xs btn-default action-btn"><i class="fa fa-pencil"></i></button></a>
+                            {% if point.unblocked %}
+                                <a href="{{ path('points_block', { 'id': point.id, 'page' : page }) }}"><button type="button" class="btn btn-xs btn-default action-btn"><i class="fa fa-lock"></i></button></a>
+                            {% else %}
+                                <a href="{{ path('points_unblock', { 'id': point.id, 'page' : page }) }}"><button type="button" class="btn btn-xs btn-default action-btn"><i class="fa fa-unlock"></i></button></a>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row text-center margin-bot">
+        <div class="col-lg-12">
+            <div class="btn-group" role="group">
+                <h5>Page {{ page }} of {{ points.pageCount }}</h5>
+                {% if page != 1 %}
+                    <a href="{{ path('points_index', {'page': page-1}) }}"><button class="btn btn-sm btn-default">Prev</button></a>
+                {% else %}
+                    <a href=""><button class="btn btn-sm btn-default disabled">Prev</button></a>
+                {% endif %}
+                {% if page != points.pageCount %}
+                    <a href="{{ path('points_index', {'page': page+1}) }}"><button class="btn btn-sm btn-default">Next</button></a>
+                {% else %}
+                    <a href=""><button class="btn btn-sm btn-default disabled">Next</button></a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{#{% extends 'dashboard.html.twig' %}
+
+{% block content %}
+    <h1>Points list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Longitude</th>
+                <th>Latitude</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Picture</th>
+                <th>Addeddate</th>
+                <th>Accepted</th>
+                <th>Unblocked</th>
+                <th>Id</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for point in points %}
+            <tr>
+                <td><a href="{{ path('points_show', { 'id': point.id }) }}">{{ point.longitude }}</a></td>
+                <td>{{ point.latitude }}</td>
+                <td>{{ point.name }}</td>
+                <td>{{ point.description }}</td>
+                <td>{{ point.picture }}</td>
+                <td>{% if point.addeddate %}{{ point.addeddate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if point.accepted %}Yes{% else %}No{% endif %}</td>
+                <td>{% if point.unblocked %}Yes{% else %}No{% endif %}</td>
+                <td>{{ point.id }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('points_show', { 'id': point.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('points_edit', { 'id': point.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('points_new') }}">Create a new entry</a>
+        </li>
+    </ul>
+{% endblock %}#}

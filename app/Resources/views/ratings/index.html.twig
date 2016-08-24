@@ -1,0 +1,41 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block content %}
+    <h1>Ratings list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Rating</th>
+                <th>Ratedate</th>
+                <th>Id</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for rating in ratings %}
+            <tr>
+                <td><a href="{{ path('ratings_show', { 'id': rating.id }) }}">{{ rating.rating }}</a></td>
+                <td>{% if rating.ratedate %}{{ rating.ratedate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ rating.id }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('ratings_show', { 'id': rating.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('ratings_edit', { 'id': rating.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('ratings_new') }}">Create a new entry</a>
+        </li>
+    </ul>
+{% endblock %}

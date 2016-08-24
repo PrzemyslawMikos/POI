@@ -1,0 +1,34 @@
+administrators_index:
+    path:     /{page}/index
+    defaults: { _controller: "PoiBundle:Administrators:index", page: 1 }
+    methods:  GET
+
+administrators_show:
+    path:     /{id}/show
+    defaults: { _controller: "PoiBundle:Administrators:show" }
+    methods:  GET
+
+administrators_new:
+    path:     /new
+    defaults: { _controller: "PoiBundle:Administrators:new" }
+    methods:  [GET, POST]
+
+administrators_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "PoiBundle:Administrators:edit" }
+    methods:  [GET, POST]
+
+administrators_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "PoiBundle:Administrators:delete" }
+    methods:  DELETE
+
+administrators_block:
+    path:     /{id}/{page}/block
+    defaults: { _controller: "PoiBundle:Administrators:block", page: 1 }
+    methods:  [GET, POST]
+
+administrators_unblock:
+    path:     /{id}/{page}/unblock
+    defaults: { _controller: "PoiBundle:Administrators:unblock", page: 1 }
+    methods:  [GET, POST]

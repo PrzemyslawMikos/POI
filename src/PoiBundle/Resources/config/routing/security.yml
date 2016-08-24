@@ -1,0 +1,4 @@
+security_login:
+    path: /login
+    defaults: { _controller: PoiBundle:Security:login }
+    methods:  [GET, POST]

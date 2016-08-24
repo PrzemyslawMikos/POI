@@ -1,0 +1,270 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block content %}
+    {# Header #}
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header"><i class="fa fa-dashboard fa-fw"></i> Overall condition</h1>
+        </div>
+    </div>
+    {# Status blocks #}
+    <div class="row">
+        {# Active block #}
+        <div class="col-lg-6 col-md-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-map-marker fa-3x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div>
+                                {{ active_amount }}
+                            </div>
+                            <div>Active working points !</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table view-table">
+                            <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>Added</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for point in active_points %}
+                                <tr>
+                                    <td>{{ point.id }}</td>
+                                    <td>{{ point.name }}</td>
+                                    <td>{{ point.addeddate|date('Y-m-d')}}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <a href="#">
+                    <div class="panel-footer">
+                        <span class="pull-left">See more active points</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        {# Users block #}
+        <div class="col-lg-6 col-md-6">
+            <div class="panel panel-green">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-child fa-3x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div>
+                                {{ users_amount }}
+                            </div>
+                            <div>Registered users !</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table view-table">
+                            <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Nickname</th>
+                                <th>Username</th>
+                                <th>Creation Date</th>
+                                <th>E-mail</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for user in users %}
+                                <td>{{ user.id}}</td>
+                                <td>{{ user.nickname}}</td>
+                                <td>{{ user.username}}</td>
+                                <td>{{ user.creationdate|date('Y-m-d, H:i:s')}}</td>
+                                <td>{{ user.email }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <a href="#">
+                    <div class="panel-footer">
+                        <span class="pull-left">See more registered users</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        {# New block #}
+        <div class="col-lg-6 col-md-6">
+            <div class="panel panel-yellow">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-level-up fa-3x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div>
+                                {{ new_amount }}
+                            </div>
+                            <div>New points to promote !</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table view-table">
+                            <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>Added</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for point in new_points %}
+                                <tr>
+                                    <td>{{ point.id }}</td>
+                                    <td>{{ point.name }}</td>
+                                    <td>{{ point.addeddate|date('Y-m-d')}}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <a href="#">
+                    <div class="panel-footer">
+                        <span class="pull-left">See more new points</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        {# Blocked block #}
+        <div class="col-lg-6 col-md-6">
+            <div class="panel panel-red">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-ban fa-3x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div>
+                                {{ blocked_amount }}
+                            </div>
+                            <div>Blocked points!</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table view-table">
+                            <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>Added</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for point in blocked_points %}
+                                <tr>
+                                    <td>{{ point.id }}</td>
+                                    <td>{{ point.name }}</td>
+                                    <td>{{ point.addeddate|date('Y-m-d')}}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <a href="#">
+                    <div class="panel-footer">
+                        <span class="pull-left">See more blocked points</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    {# Header #}
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header"><i class="fa fa-user fa-fw"></i> Your assets</h1>
+        </div>
+    </div>
+    {# Admin blocks #}
+    <div class="row">
+        <div class="col-lg-6 col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-check fa-3x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div>
+                                {{ admin_amount }}
+                            </div>
+                            <div>Points accepted by You !</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table view-table">
+                            <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Added</th>
+                                <th>Id</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for point in admin_points %}
+                                {% if point.unblocked %}
+                                    <tr class="success">
+                                    <td><i class="fa fa-check fa-fw"></i></td>
+                                {% else %}
+                                    <tr class="danger">
+                                    <td><i class="fa fa-ban fa-fw"></i></td>
+                                {% endif %}
+                                    <td>{{ point.name }}</td>
+                                    <td>{{ point.description }}</td>
+                                    <td>{{ point.addeddate|date('Y-m-d')}}</td>
+                                    <td>{{ point.id }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <a href="#">
+                    <div class="panel-footer">
+                        <span class="pull-left">See more points accepted by You</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

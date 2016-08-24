@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="PoiBundle\Entity\Administrators" table="administrators" repository-class="PoiBundle\Repository\AdministratorsRepository">
+    <indexes>
+      <index name="FK_Administrators_Roles_idx" columns="Role_Id"/>
+    </indexes>
+    <id name="id" type="integer" column="Id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="firstname" type="string" column="FirstName" length="60" nullable="false"/>
+    <field name="lastname" type="string" column="LastName" length="60" nullable="false"/>
+    <field name="phone" type="string" column="Phone" length="15" nullable="false"/>
+    <field name="email" type="string" column="Email" length="50" nullable="false"/>
+    <field name="username" type="string" column="Username" length="30" nullable="false"/>
+    <field name="password" type="string" column="Password" length="255" nullable="false"/>
+    <field name="firstlogin" type="boolean" column="FirstLogin" nullable="false"/>
+    <field name="unblocked" type="boolean" column="Unblocked" nullable="false"/>
+    <many-to-one field="role" target-entity="Roles">
+      <join-columns>
+        <join-column name="Role_Id" referenced-column-name="Id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

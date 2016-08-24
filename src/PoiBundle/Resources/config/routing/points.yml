@@ -1,0 +1,34 @@
+points_index:
+    path:     /{page}/index
+    defaults: { _controller: "PoiBundle:Points:index", page: 1  }
+    methods:  GET
+
+points_show:
+    path:     /{id}/show
+    defaults: { _controller: "PoiBundle:Points:show" }
+    methods:  GET
+
+points_new:
+    path:     /new
+    defaults: { _controller: "PoiBundle:Points:new" }
+    methods:  [GET, POST]
+
+points_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "PoiBundle:Points:edit" }
+    methods:  [GET, POST]
+
+points_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "PoiBundle:Points:delete" }
+    methods:  DELETE
+
+points_block:
+    path:     /{id}/{page}/block
+    defaults: { _controller: "PoiBundle:Points:block", page: 1 }
+    methods:  [GET, POST]
+
+points_unblock:
+    path:     /{id}/{page}/unblock
+    defaults: { _controller: "PoiBundle:Points:unblock", page: 1 }
+    methods:  [GET, POST]

@@ -1,0 +1,24 @@
+types_index:
+    path:     /{page}/index
+    defaults: { _controller: "PoiBundle:Types:index", page: 1 }
+    methods:  GET
+
+types_show:
+    path:     /{id}/show
+    defaults: { _controller: "PoiBundle:Types:show" }
+    methods:  GET
+
+types_new:
+    path:     /new
+    defaults: { _controller: "PoiBundle:Types:new" }
+    methods:  [GET, POST]
+
+types_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "PoiBundle:Types:edit" }
+    methods:  [GET, POST]
+
+types_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "PoiBundle:Types:delete" }
+    methods:  DELETE

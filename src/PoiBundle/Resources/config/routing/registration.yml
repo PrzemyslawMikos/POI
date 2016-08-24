@@ -1,0 +1,4 @@
+registration_admin:
+    path:     /admin
+    defaults: { _controller: "PoiBundle:Registration:admin" }
+    methods:  [GET, POST]

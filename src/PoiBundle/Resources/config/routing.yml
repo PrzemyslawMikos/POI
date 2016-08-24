@@ -1,0 +1,38 @@
+poi_administrators:
+    resource: "@PoiBundle/Resources/config/routing/administrators.yml"
+    prefix:   /administrators
+
+poi_points:
+    resource: "@PoiBundle/Resources/config/routing/points.yml"
+    prefix:   /points
+
+poi_ratings:
+    resource: "@PoiBundle/Resources/config/routing/ratings.yml"
+    prefix:   /ratings
+
+poi_types:
+    resource: "@PoiBundle/Resources/config/routing/types.yml"
+    prefix:   /types
+
+poi_users:
+    resource: "@PoiBundle/Resources/config/routing/users.yml"
+    prefix:   /users
+
+poi_main:
+    resource: "@PoiBundle/Resources/config/routing/main.yml"
+    prefix:   /main
+
+poi_security:
+    resource: "@PoiBundle/Resources/config/routing/security.yml"
+    prefix:   /
+
+poi_registration:
+    resource: "@PoiBundle/Resources/config/routing/registration.yml"
+    prefix: /registration
+
+poi_application:
+    resource: "@PoiBundle/Resources/config/routing/application.yml"
+    prefix: /application
+
+logout:
+  path: /logout

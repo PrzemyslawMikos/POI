@@ -1,0 +1,52 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h2 class="page-header"><i class="fa fa-list fa-fw"></i> All Types</h2>
+        </div>
+    </div>
+    {% set i=0 %}
+        {% for type in types %}
+            {% if i == 0 %}
+                <div class="row">
+                    {% elseif i%3 == 0 %}
+                    </div>
+                <div class="row">
+            {% endif %}
+                <div class="col-lg-4">
+                    <div class="thumbnail">
+                        <img class="image-max" src="{{ asset(types_directory ~ type.image) }}" />
+                        <div class="caption">
+                            <h4>{{ type.name }}</h4>
+                            <h5>Added: {{ type.addeddate|date('Y-m-d, H:i:s') }}</h5>
+                            <p><i>{{ type.description }}</i></p>
+                            <hr>
+                            <a href="{{ path('types_show', { 'id': type.id }) }}"><button type="button" class="btn btn-sm btn-success"><i class="fa fa-info"></i> Info</button></a>
+                            <a href="{{ path('types_edit', { 'id': type.id }) }}"><button type="button" class="btn btn-sm btn-primary"><i class="fa fa-pencil"></i> Edit</button></a>
+                        </div>
+                    </div>
+                </div>
+                    {% if loop.last %}
+                        </div>
+                    {% endif %}
+                {% set i = i + 1 %}
+        {% endfor %}
+    <div class="row text-center margin-bot">
+        <div class="col-lg-12">
+            <div class="btn-group" role="group">
+                <h5>Page {{ page }} of {{ types.pageCount }}</h5>
+                {% if page != 1 %}
+                        <a href="{{ path('types_index', {'page': page-1}) }}"><button class="btn btn-sm btn-default">Prev</button></a>
+                    {% else %}
+                        <a href="{{ path('types_index', {'page': page-1}) }}"><button class="btn btn-sm btn-default disabled">Prev</button></a>
+                {% endif %}
+                {% if page != types.pageCount %}
+                        <a href="{{ path('types_index', {'page': page+1}) }}"><button class="btn btn-sm btn-default">Next</button></a>
+                    {% else %}
+                        <a href="{{ path('types_index', {'page': page+1}) }}"><button class="btn btn-sm btn-default disabled">Next</button></a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

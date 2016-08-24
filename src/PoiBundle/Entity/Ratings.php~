@@ -1,0 +1,59 @@
+<?php
+
+namespace PoiBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Ratings
+ *
+ * @ORM\Table(name="ratings", indexes={@ORM\Index(name="FK_Users_Points_idx", columns={"User_Id"}), @ORM\Index(name="FK_Ratings_Points_idx", columns={"Point_Id"})})
+ * @ORM\Entity
+ */
+class Ratings
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="Id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="Rating", type="integer", nullable=false)
+     */
+    private $rating;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="RateDate", type="datetime", nullable=false)
+     */
+    private $ratedate;
+
+    /**
+     * @var \Points
+     *
+     * @ORM\ManyToOne(targetEntity="Points")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="Point_Id", referencedColumnName="Id")
+     * })
+     */
+    private $point;
+
+    /**
+     * @var \Users
+     *
+     * @ORM\ManyToOne(targetEntity="Users")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="User_Id", referencedColumnName="Id")
+     * })
+     */
+    private $user;
+
+
+}

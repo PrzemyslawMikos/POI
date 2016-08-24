@@ -1,0 +1,111 @@
+<?php
+
+namespace PoiBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Points
+ *
+ * @ORM\Table(name="points", indexes={@ORM\Index(name="FK_Points_Users_idx", columns={"User_Id"}), @ORM\Index(name="FK_Points_Types_idx", columns={"Type_Id"}), @ORM\Index(name="FK_Points_Administrators_idx", columns={"Accept_Id"})})
+ * @ORM\Entity
+ */
+class Points
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="Id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Longitude", type="decimal", precision=9, scale=6, nullable=false)
+     */
+    private $longitude;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Latitude", type="decimal", precision=9, scale=6, nullable=false)
+     */
+    private $latitude;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Name", type="string", length=150, nullable=false)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Description", type="string", length=300, nullable=false)
+     */
+    private $description;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Picture", type="blob", length=16777215, nullable=false)
+     */
+    private $picture;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="AddedDate", type="datetime", nullable=false)
+     */
+    private $addeddate;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="Accepted", type="boolean", nullable=false)
+     */
+    private $accepted;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="Unblocked", type="boolean", nullable=false)
+     */
+    private $unblocked;
+
+    /**
+     * @var \Administrators
+     *
+     * @ORM\ManyToOne(targetEntity="Administrators")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="Accept_Id", referencedColumnName="Id")
+     * })
+     */
+    private $accept;
+
+    /**
+     * @var \Types
+     *
+     * @ORM\ManyToOne(targetEntity="Types")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="Type_Id", referencedColumnName="Id")
+     * })
+     */
+    private $type;
+
+    /**
+     * @var \Users
+     *
+     * @ORM\ManyToOne(targetEntity="Users")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="User_Id", referencedColumnName="Id")
+     * })
+     */
+    private $user;
+
+
+}

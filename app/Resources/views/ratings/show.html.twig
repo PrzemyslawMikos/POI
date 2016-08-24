@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Ratings</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Rating</th>
+                <td>{{ rating.rating }}</td>
+            </tr>
+            <tr>
+                <th>Ratedate</th>
+                <td>{% if rating.ratedate %}{{ rating.ratedate|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Id</th>
+                <td>{{ rating.id }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('ratings_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('ratings_edit', { 'id': rating.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

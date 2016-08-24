@@ -1,0 +1,56 @@
+<?php
+
+namespace PoiBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Warnings
+ *
+ * @ORM\Table(name="warnings", indexes={@ORM\Index(name="FK_Warnings_Users_idx", columns={"User_Id"})})
+ * @ORM\Entity
+ */
+class Warnings
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="Id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Description", type="string", length=300, nullable=false)
+     */
+    private $description;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="Date", type="datetime", nullable=false)
+     */
+    private $date;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="Active", type="boolean", nullable=false)
+     */
+    private $active;
+
+    /**
+     * @var \Users
+     *
+     * @ORM\ManyToOne(targetEntity="Users")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="User_Id", referencedColumnName="Id")
+     * })
+     */
+    private $user;
+
+
+}
