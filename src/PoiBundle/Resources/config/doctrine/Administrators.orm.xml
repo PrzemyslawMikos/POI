@@ -7,15 +7,39 @@
     <id name="id" type="integer" column="Id">
       <generator strategy="IDENTITY"/>
     </id>
-    <field name="firstname" type="string" column="FirstName" length="60" nullable="false"/>
-    <field name="lastname" type="string" column="LastName" length="60" nullable="false"/>
-    <field name="phone" type="string" column="Phone" length="15" nullable="false"/>
-    <field name="email" type="string" column="Email" length="50" nullable="false"/>
-    <field name="username" type="string" column="Username" length="30" nullable="false"/>
-    <field name="password" type="string" column="Password" length="255" nullable="false"/>
+    <field name="firstname" type="string" column="FirstName" length="60" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="lastname" type="string" column="LastName" length="60" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="phone" type="string" column="Phone" length="15" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="email" type="string" column="Email" length="50" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="username" type="string" column="Username" length="30" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="password" type="string" column="Password" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
     <field name="firstlogin" type="boolean" column="FirstLogin" nullable="false"/>
     <field name="unblocked" type="boolean" column="Unblocked" nullable="false"/>
-    <many-to-one field="role" target-entity="Roles">
+    <many-to-one field="role" target-entity="Roles" fetch="LAZY">
       <join-columns>
         <join-column name="Role_Id" referenced-column-name="Id"/>
       </join-columns>

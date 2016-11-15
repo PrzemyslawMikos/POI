@@ -1,6 +1,6 @@
 users_index:
-    path:     /
-    defaults: { _controller: "PoiBundle:Users:index" }
+    path:      /{page}/index
+    defaults: { _controller: "PoiBundle:Users:index", page: 1 }
     methods:  GET
 
 users_show:

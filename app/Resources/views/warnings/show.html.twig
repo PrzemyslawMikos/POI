@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Warnings</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Description</th>
+                <td>{{ warning.description }}</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{% if warning.date %}{{ warning.date|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Active</th>
+                <td>{% if warning.active %}Yes{% else %}No{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Id</th>
+                <td>{{ warning.id }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('warnings_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('warnings_edit', { 'id': warning.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

@@ -23,6 +23,21 @@ points_delete:
     defaults: { _controller: "PoiBundle:Points:delete" }
     methods:  DELETE
 
+points_disabled:
+    path:     /{page}/disabled
+    defaults: { _controller: "PoiBundle:Points:disabled", page: 1 }
+    methods:  [GET, POST]
+
+points_enabled:
+    path:     /{page}/enabled
+    defaults: { _controller: "PoiBundle:Points:enabled", page: 1 }
+    methods:  [GET, POST]
+
+points_acceptable:
+    path:     /{page}/acceptable
+    defaults: { _controller: "PoiBundle:Points:acceptable", page: 1 }
+    methods:  [GET, POST]
+
 points_block:
     path:     /{id}/{page}/block
     defaults: { _controller: "PoiBundle:Points:block", page: 1 }
@@ -31,4 +46,9 @@ points_block:
 points_unblock:
     path:     /{id}/{page}/unblock
     defaults: { _controller: "PoiBundle:Points:unblock", page: 1 }
+    methods:  [GET, POST]
+
+points_promote:
+    path:     /{id}/promote
+    defaults: { _controller: "PoiBundle:Points:promote", page: 1 }
     methods:  [GET, POST]

@@ -17,11 +17,12 @@ use Symfony\Component\Serializer\Serializer;
 class ApplicationController extends Controller
 {
 
-    public function loginAction(Request $request){
+    public function loginAction(Request $request)
+    {
 
         $JHelper = new JSONHelper();
         $data = $request->request->get('user');
-        if( !empty($data)){
+        if (!empty($data)) {
             $appuser = $JHelper->deserialize($request->request->get("user"), 'PoiBundle\Entity\Administrators');
             $appuser->setFirstname("1");
             $appuser->setLastname("2");
@@ -35,15 +36,9 @@ class ApplicationController extends Controller
             $em->persist($appuser);
             $em->flush();
             return new Response("Dodano!");
-        }
-        else{
+        } else {
             return new Response("Dzikie bledy");
         }
-    }
-
-    public function indexAction(){
-        return new Response('banggg');
-        //return $this->render('application/index.html.twig');
     }
 
     /**

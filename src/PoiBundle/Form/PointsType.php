@@ -20,13 +20,14 @@ class PointsType extends AbstractType
             ->add('latitude')
             ->add('name')
             ->add('description')
-            ->add('picture')
+            //->add('picture')
             ->add('addeddate', DateType::class)
             ->add('accepted')
             ->add('unblocked')
             ->add('accept')
             ->add('type')
-            ->add('user')
+            ->add('user');
+            $builder->addEventSubscriber(new PointFields());
         ;
     }
     

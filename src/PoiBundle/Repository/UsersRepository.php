@@ -10,4 +10,18 @@ namespace PoiBundle\Repository;
  */
 class UsersRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function findAllQuery()
+    {
+        $query = $this->getEntityManager()->createQueryBuilder();
+
+        $query
+            ->select(['Users'])
+            ->from('PoiBundle:Users', 'Users');
+
+        try {
+            return $query->getQuery();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
 }

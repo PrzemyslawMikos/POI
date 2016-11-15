@@ -13,7 +13,20 @@
                     <div class="row">
                         <div class="col-lg-6 text-center">
                             <h4>Picture</h4>
-                            <img class="image-max" src="{{ asset(points_directory ~ point.picture) }}" />
+                            <img type="button" class="image-max" src="{{ asset(points_directory ~ point.picture) }}" data-toggle="modal" data-target="#img1">
+                            <div id="img1" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">×</span>
+                                            </button>
+                                            <h5 class="modal-title" id="myLargeModalLabel">{{ point.name }}</h5>
+                                        </div>
+                                        <img class="image-point-modal" src="{{ asset(points_directory ~ point.picture) }}">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-lg-6 ">
                             <h4 class="text-center">Informations</h4>
@@ -43,6 +56,10 @@
                                     <tr>
                                         <th>Added:</th>
                                         <td>{{ point.addeddate|date('Y-m-d,  H:i:s') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>MimeType:</th>
+                                        <td>{{ point.mimetype}}</td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -112,7 +129,11 @@
             </div>
         </div>
     </div>
+    <script src="{{ asset('bundles/dashboard/dist/js/own_dashboard.js') }}"></script>
+    <script>
+        setLocation({{  point.latitude }}, {{ point.longitude }}, "{{ address }}");
+    </script>
     <script async defer
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCoc4lM1K_MEzjqgtody9uZwA4f5x054Cc&callback=initMap">
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDLlgsQgrT9WZ9E43J7hTOtjh1qcZLJCpo&callback=initMap">
     </script>
 {% endblock %}

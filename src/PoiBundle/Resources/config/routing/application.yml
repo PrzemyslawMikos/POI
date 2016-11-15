@@ -1,8 +1,3 @@
-appllication_index:
-    path:     /index
-    defaults: { _controller: "PoiBundle:Application:index" }
-    methods:  GET
-
 application_login:
     path:     /login
     defaults: { _controller: "PoiBundle:Application:login" }

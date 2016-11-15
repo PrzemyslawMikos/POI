@@ -1,0 +1,24 @@
+versions_index:
+    path:     /
+    defaults: { _controller: "PoiBundle:Versions:index" }
+    methods:  GET
+
+versions_show:
+    path:     /{id}/show
+    defaults: { _controller: "PoiBundle:Versions:show" }
+    methods:  GET
+
+versions_new:
+    path:     /new
+    defaults: { _controller: "PoiBundle:Versions:new" }
+    methods:  [GET, POST]
+
+versions_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "PoiBundle:Versions:edit" }
+    methods:  [GET, POST]
+
+versions_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "PoiBundle:Versions:delete" }
+    methods:  DELETE
