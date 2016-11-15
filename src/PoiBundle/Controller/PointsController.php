@@ -7,8 +7,15 @@ use PoiBundle\Additional\PaginationHelper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use PoiBundle\Additional\GoogleApiHelper;
+use PoiBundle\Additional\ChangesManager;
 use PoiBundle\Entity\Points;
+use PoiBundle\Entity\Versions;
+use PoiBundle\Entity\Changes;
+use PoiBundle\Entity\Control;
 use PoiBundle\Form\PointsType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use PoiBundle\Controller\ChangesController;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * Points controller.
@@ -31,7 +38,7 @@ class PointsController extends Controller
 
         return $this->render('points/index.html.twig', array(
             'points' => $paginationHelper,
-            'page' => $page,
+            'page' => $page
         ));
     }
 
@@ -39,14 +46,16 @@ class PointsController extends Controller
      * Lists enabled Points entities.
      *
      */
-    public function enabledAction()
+    public function enabledAction($page = 1)
     {
-        $em = $this->getDoctrine()->getManager();
+        $query = $this->getDoctrine()->getRepository('PoiBundle:Points')->findAcceptedAndUnblockedQuery(true, true);
 
-        $points = $em->getRepository('PoiBundle:Points')->findAll();
+        $paginationHelper = new PaginationHelper($query, $this->getParameter("points_index_elements"), $page);
+        $paginationHelper->makePagination();
 
-        return $this->render('points/index.html.twig', array(
-            'points' => $points,
+        return $this->render('points/enabled.html.twig', array(
+            'points' => $paginationHelper,
+            'page' => $page
         ));
     }
 
@@ -54,14 +63,33 @@ class PointsController extends Controller
      * Lists disabled Points entities.
      *
      */
-    public function disabledAction()
+    public function disabledAction($page = 1)
     {
-        $em = $this->getDoctrine()->getManager();
+        $query = $this->getDoctrine()->getRepository('PoiBundle:Points')->findAcceptedAndUnblockedQuery(true, false);
 
-        $points = $em->getRepository('PoiBundle:Points')->findAll();
+        $paginationHelper = new PaginationHelper($query, $this->getParameter("points_index_elements"), $page);
+        $paginationHelper->makePagination();
 
-        return $this->render('points/index.html.twig', array(
-            'points' => $points,
+        return $this->render('points/blocked.html.twig', array(
+            'points' => $paginationHelper,
+            'page' => $page
+        ));
+    }
+
+    /**
+     * Lists acceptable Points entities.
+     *
+     */
+    public function acceptableAction($page = 1)
+    {
+        $query = $this->getDoctrine()->getRepository('PoiBundle:Points')->findAcceptedAndUnblockedQuery(false, true);
+
+        $paginationHelper = new PaginationHelper($query, $this->getParameter("points_index_elements"), $page);
+        $paginationHelper->makePagination();
+
+        return $this->render('points/acceptable.html.twig', array(
+            'points' => $paginationHelper,
+            'page' => $page
         ));
     }
 
@@ -118,7 +146,8 @@ class PointsController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($point);
             $em->flush();
-
+            // Modufy = 1
+            $this->AddChanges($point,  $this->getParameter('modify_action_version'));
             return $this->redirectToRoute('points_edit', array('id' => $point->getId()));
         }
 
@@ -139,6 +168,8 @@ class PointsController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($point);
             $em->flush($point);
+            // Delete = 2
+            $this->AddChanges($point,  $this->getParameter('delete_action_version'));
             $this->addFlash(
                 'success',
                 'Point blocked successfully');
@@ -152,6 +183,38 @@ class PointsController extends Controller
     }
 
     /**
+     * Promote selected Point entity
+     * @param Request $request
+     * @param Points $point
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function promoteAction(Request $request, Points $point){
+        $address = GoogleApiHelper::getGoogleAddress($point->getLatitude(), $point->getLongitude(), $this->getParameter("points_geo_language"));
+        // TODO Create new custom form file, change form name
+        $form = $this->createFormBuilder($point)
+            ->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()){
+            $em = $this->getDoctrine()->getManager();
+            $point->setAccept($em->getRepository('PoiBundle:Administrators')->find($this->getUser()->getId()));
+            $point->setAccepted(true);
+            $em->persist($point);
+            $em->flush();
+            // Add = 0
+            $this->AddChanges($point,  $this->getParameter('add_action_version'));
+
+            return $this->redirectToRoute('points_edit', array('id' => $point->getId()));
+        }
+
+        return $this->render('points/promote.html.twig', array(
+            'point' => $point,
+            'address' => $address,
+            'form' => $form->createView()
+        ));
+    }
+
+    /**
      * Unblocks selected Point entity
      *
      */
@@ -161,6 +224,8 @@ class PointsController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($point);
             $em->flush($point);
+            // Add = 0
+            $this->AddChanges($point,  $this->getParameter('add_action_version'));
             $this->addFlash(
                 'success',
                 'Point unblocked successfully');
@@ -186,6 +251,8 @@ class PointsController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->remove($point);
             $em->flush();
+            // Delete = 2
+            $this->AddChanges($point,  $this->getParameter('delete_action_version'));
         }
 
         return $this->redirectToRoute('points_index');
@@ -205,5 +272,50 @@ class PointsController extends Controller
             ->setMethod('DELETE')
             ->getForm()
         ;
+    }
+
+    public function GetCurrentVersionAddIfFull(){
+        $em = $this->getDoctrine()->getManager();
+        $latest = $em->getRepository('PoiBundle:Versions')->findLatestResult();
+        if(empty($latest)){
+            $version = new Versions();
+            $version->setAddeddate(new \DateTime());
+            $version->setMembers(0);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($version);
+            $em->flush();
+            return $em->getRepository('PoiBundle:Versions')->findLatestResult();
+        }
+        else{
+            $control = $em->getRepository('PoiBundle:Control')->find(1);
+            if($latest->getMembers() < $control->getTonextversion()){
+                return $latest;
+            }
+            else{
+                $version = new Versions();
+                $version->setAddeddate(new \DateTime());
+                $version->setMembers(0);
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($version);
+                $em->flush();
+                return $em->getRepository('PoiBundle:Versions')->findLatestResult();
+            }
+        }
+    }
+
+    public function AddChanges($point, $actionType){
+        $change = new Changes();
+        $currentVersion = $this->GetCurrentVersionAddIfFull();
+        $members = $currentVersion->getMembers();
+        $members++;
+        $currentVersion->setMembers($members);
+        $change->setPoint($point);
+        $change->setVersion($currentVersion);
+        $change->setDate(new \DateTime());
+        $change->setActiontype($actionType);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($change);
+        $em->persist($currentVersion);
+        $em->flush();
     }
 }

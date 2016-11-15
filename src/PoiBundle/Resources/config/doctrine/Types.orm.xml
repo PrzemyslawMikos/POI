@@ -7,12 +7,28 @@
     <id name="id" type="integer" column="Id">
       <generator strategy="IDENTITY"/>
     </id>
-    <field name="name" type="string" column="Name" length="50" nullable="false"/>
-    <field name="description" type="string" column="Description" length="200" nullable="false"/>
+    <field name="name" type="string" column="Name" length="50" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="description" type="string" column="Description" length="200" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
     <field name="addeddate" type="datetime" column="AddedDate" nullable="false"/>
-    <field name="image" type="string" column="Image" length="255" nullable="false"/>
-    <field name="mimetype" type="string" column="MimeType" length="50" nullable="false"/>
-    <many-to-one field="creator" target-entity="Administrators">
+    <field name="image" type="string" column="Image" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="mimetype" type="string" column="MimeType" length="50" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <many-to-one field="creator" target-entity="Administrators" fetch="LAZY">
       <join-columns>
         <join-column name="Creator_Id" referenced-column-name="Id"/>
       </join-columns>

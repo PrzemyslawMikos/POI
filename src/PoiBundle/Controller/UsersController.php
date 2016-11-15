@@ -4,7 +4,7 @@ namespace PoiBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
+use PoiBundle\Additional\PaginationHelper;
 use PoiBundle\Entity\Users;
 use PoiBundle\Form\UsersType;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -20,16 +20,19 @@ class UsersController extends Controller
 {
     /**
      * Lists all Users entities.
-     *
+     * @param int $page
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction()
+    public function indexAction($page = 1)
     {
-        $em = $this->getDoctrine()->getManager();
+        $query = $this->getDoctrine()->getRepository('PoiBundle:Users')->findAllQuery();
 
-        $users = $em->getRepository('PoiBundle:Users')->findAll();
+        $paginationHelper = new PaginationHelper($query, $this->getParameter("administrators_index_elements"), $page);
+        $paginationHelper->makePagination();
 
         return $this->render('users/index.html.twig', array(
-            'users' => $users,
+            'users' => $paginationHelper,
+            'page' => $page,
         ));
     }
 
@@ -37,7 +40,7 @@ class UsersController extends Controller
      * Creates a new Users entity. Sending user entity in Json format
      *
      */
-    public function newAction(Request $request)
+   /* public function newAction(Request $request)
     {
         $user = new Users();
         $form = $this->createForm('PoiBundle\Form\UsersType', $user);
@@ -61,13 +64,13 @@ class UsersController extends Controller
             'user' => $user,
             'form' => $form->createView(),
         ));
-    }
+    }*/
 
     /**
      * Creates a new Users entity. Original !
      *
      */
-    /*public function newAction(Request $request)
+    public function newAction(Request $request)
     {
         $user = new Users();
         $form = $this->createForm('PoiBundle\Form\UsersType', $user);
@@ -85,7 +88,7 @@ class UsersController extends Controller
             'user' => $user,
             'form' => $form->createView(),
         ));
-    }*/
+    }
 
     /**
      * Finds and displays a Users entity.

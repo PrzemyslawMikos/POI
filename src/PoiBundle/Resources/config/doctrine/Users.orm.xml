@@ -11,15 +11,35 @@
     <id name="id" type="integer" column="Id">
       <generator strategy="IDENTITY"/>
     </id>
-    <field name="nickname" type="string" column="Nickname" length="30" nullable="false"/>
-    <field name="email" type="string" column="Email" length="50" nullable="false"/>
-    <field name="phone" type="string" column="Phone" length="15" nullable="true"/>
-    <field name="username" type="string" column="Username" length="30" nullable="false"/>
-    <field name="password" type="string" column="Password" length="255" nullable="false"/>
+    <field name="nickname" type="string" column="Nickname" length="30" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="email" type="string" column="Email" length="50" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="phone" type="string" column="Phone" length="15" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="username" type="string" column="Username" length="30" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="password" type="string" column="Password" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
     <field name="creationdate" type="datetime" column="CreationDate" nullable="false"/>
     <field name="firstlogin" type="boolean" column="FirstLogin" nullable="false"/>
     <field name="unblocked" type="boolean" column="Unblocked" nullable="false"/>
-    <many-to-one field="permission" target-entity="PoiBundle\Entity\Permissions">
+    <many-to-one field="permission" target-entity="Permissions" fetch="LAZY">
       <join-columns>
         <join-column name="Permission_Id" referenced-column-name="Id"/>
       </join-columns>

@@ -24,4 +24,21 @@ class PointsRepository extends \Doctrine\ORM\EntityRepository
             return null;
         }
     }
+
+    public function findAcceptedAndUnblockedQuery($accepted, $unblocked)
+    {
+        $query = $this->getEntityManager()->createQueryBuilder();
+
+        $query
+            ->select(['Points'])
+            ->from('PoiBundle:Points', 'Points')
+            ->where('Points.accepted = ' . ($accepted ? 'true' : 'false'))
+            ->andWhere('Points.unblocked = ' . ($unblocked ? 'true' : 'false'));
+
+        try {
+            return $query->getQuery();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
 }

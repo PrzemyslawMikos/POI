@@ -1,0 +1,41 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block content %}
+    <h1>Versions list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Members</th>
+                <th>Addeddate</th>
+                <th>Id</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for version in versions %}
+            <tr>
+                <td><a href="{{ path('versions_show', { 'id': version.id }) }}">{{ version.members }}</a></td>
+                <td>{% if version.addeddate %}{{ version.addeddate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ version.id }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('versions_show', { 'id': version.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('versions_edit', { 'id': version.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('versions_new') }}">Create a new entry</a>
+        </li>
+    </ul>
+{% endblock %}

@@ -56,4 +56,106 @@ class Ratings
     private $user;
 
 
+
+    /**
+     * Set rating
+     *
+     * @param integer $rating
+     * @return Ratings
+     */
+    public function setRating($rating)
+    {
+        $this->rating = $rating;
+
+        return $this;
+    }
+
+    /**
+     * Get rating
+     *
+     * @return integer 
+     */
+    public function getRating()
+    {
+        return $this->rating;
+    }
+
+    /**
+     * Set ratedate
+     *
+     * @param \DateTime $ratedate
+     * @return Ratings
+     */
+    public function setRatedate($ratedate)
+    {
+        $this->ratedate = $ratedate;
+
+        return $this;
+    }
+
+    /**
+     * Get ratedate
+     *
+     * @return \DateTime 
+     */
+    public function getRatedate()
+    {
+        return $this->ratedate;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set point
+     *
+     * @param \PoiBundle\Entity\Points $point
+     * @return Ratings
+     */
+    public function setPoint(\PoiBundle\Entity\Points $point = null)
+    {
+        $this->point = $point;
+
+        return $this;
+    }
+
+    /**
+     * Get point
+     *
+     * @return \PoiBundle\Entity\Points 
+     */
+    public function getPoint()
+    {
+        return $this->point;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \PoiBundle\Entity\Users $user
+     * @return Ratings
+     */
+    public function setUser(\PoiBundle\Entity\Users $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \PoiBundle\Entity\Users 
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
 }

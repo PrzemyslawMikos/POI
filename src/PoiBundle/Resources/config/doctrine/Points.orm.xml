@@ -9,25 +9,42 @@
     <id name="id" type="integer" column="Id">
       <generator strategy="IDENTITY"/>
     </id>
-    <field name="longitude" type="decimal" column="Longitude" precision="9" scale="6" nullable="false"/>
-    <field name="latitude" type="decimal" column="Latitude" precision="9" scale="6" nullable="false"/>
-    <field name="name" type="string" column="Name" length="150" nullable="false"/>
-    <field name="description" type="string" column="Description" length="300" nullable="false"/>
-    <field name="picture" type="blob" column="Picture" length="16777215" nullable="false"/>
+    <field name="longitude" type="decimal" column="Longitude" precision="12" scale="9" nullable="false"/>
+    <field name="latitude" type="decimal" column="Latitude" precision="12" scale="9" nullable="false"/>
+    <field name="name" type="string" column="Name" length="150" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="description" type="string" column="Description" length="300" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="picture" type="string" column="Picture" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="mimetype" type="string" column="MimeType" length="50" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
     <field name="addeddate" type="datetime" column="AddedDate" nullable="false"/>
     <field name="accepted" type="boolean" column="Accepted" nullable="false"/>
     <field name="unblocked" type="boolean" column="Unblocked" nullable="false"/>
-    <many-to-one field="accept" target-entity="Administrators">
+    <many-to-one field="accept" target-entity="Administrators" fetch="LAZY">
       <join-columns>
         <join-column name="Accept_Id" referenced-column-name="Id"/>
       </join-columns>
     </many-to-one>
-    <many-to-one field="type" target-entity="Types">
+    <many-to-one field="type" target-entity="Types" fetch="LAZY">
       <join-columns>
         <join-column name="Type_Id" referenced-column-name="Id"/>
       </join-columns>
     </many-to-one>
-    <many-to-one field="user" target-entity="Users">
+    <many-to-one field="user" target-entity="Users" fetch="LAZY">
       <join-columns>
         <join-column name="User_Id" referenced-column-name="Id"/>
       </join-columns>

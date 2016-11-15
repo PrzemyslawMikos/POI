@@ -1,0 +1,16 @@
+{% extends 'dahboard.html.twig' %}
+
+{% block content %}
+    <h1>Versions creation</h1>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <input type="submit" value="Create" />
+    {{ form_end(form) }}
+
+    <ul>
+        <li>
+            <a href="{{ path('versions_index') }}">Back to the list</a>
+        </li>
+    </ul>
+{% endblock %}

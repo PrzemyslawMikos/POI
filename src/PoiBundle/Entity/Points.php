@@ -3,12 +3,12 @@
 namespace PoiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Points
  *
  * @ORM\Table(name="points", indexes={@ORM\Index(name="FK_Points_Users_idx", columns={"User_Id"}), @ORM\Index(name="FK_Points_Types_idx", columns={"Type_Id"}), @ORM\Index(name="FK_Points_Administrators_idx", columns={"Accept_Id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="PoiBundle\Repository\PointsRepository")
  */
 class Points implements \Serializable
 {
@@ -51,10 +51,17 @@ class Points implements \Serializable
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Picture", type="blob", length=16777215, nullable=false)
+     * @Assert\File(mimeTypes={"image/jpg", "image/jpeg", "image/png"})
+     * @ORM\Column(name="Picture", type="string", length=255, nullable=false)
      */
     private $picture;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="MimeType", type="string", length=50, nullable=false)
+     */
+    private $mimetype;
 
     /**
      * @var \DateTime
@@ -222,6 +229,29 @@ class Points implements \Serializable
     public function getPicture()
     {
         return $this->picture;
+    }
+
+    /**
+     * Set mimetype
+     *
+     * @param string $mimetype
+     * @return Points
+     */
+    public function setMimetype($mimetype)
+    {
+        $this->mimetype = $mimetype;
+
+        return $this;
+    }
+
+    /**
+     * Get mimetype
+     *
+     * @return string
+     */
+    public function getMimetype()
+    {
+        return $this->mimetype;
     }
 
     /**

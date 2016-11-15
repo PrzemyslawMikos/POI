@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Changes list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Actiontype</th>
+                <th>Id</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for change in changes %}
+            <tr>
+                <td><a href="{{ path('changes_show', { 'id': change.id }) }}">{{ change.date }}</a></td>
+                <td>{{ change.actiontype }}</td>
+                <td>{{ change.id }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('changes_show', { 'id': change.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('changes_edit', { 'id': change.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('changes_new') }}">Create a new entry</a>
+        </li>
+    </ul>
+{% endblock %}

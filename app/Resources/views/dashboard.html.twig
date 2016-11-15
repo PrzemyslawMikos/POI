@@ -159,13 +159,13 @@
                                 <a href="{{ path('points_index') }}"><i class="fa fa-list fa-fw"></i> View all</a>
                             </li>
                             <li>
-                                <a href="morris.html"><i class="fa fa-check fa-fw"></i> Enabled</a>
+                                <a href="{{ path('points_enabled') }}"><i class="fa fa-check fa-fw"></i> Enabled</a>
                             </li>
                             <li>
-                                <a href="morris.html"><i class="fa fa-ban fa-fw"></i> Blocked</a>
+                                <a href="{{ path('points_disabled') }}"><i class="fa fa-ban fa-fw"></i> Blocked</a>
                             </li>
                             <li>
-                                <a href="morris.html"><i class="fa fa-check-square fa-fw"></i> Acceptable</a>
+                                <a href="{{ path('points_acceptable') }}"><i class="fa fa-check-square fa-fw"></i> Acceptable</a>
                             </li>
                         </ul>
                         <!-- /.nav-second-level -->
@@ -178,6 +178,18 @@
                             </li>
                             <li>
                                 <a href="{{ path('types_new') }}"><i class="fa fa-plus fa-fw"></i> Add</a>
+                            </li>
+                        </ul>
+                        <!-- /.nav-second-level -->
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-code-fork fa-fw"></i> Versions<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="{{ path('versions_index') }}"><i class="fa fa-list fa-fw"></i> View all</a>
+                            </li>
+                            <li>
+                                <a href="{{ path('control_index') }}"><i class="fa fa-cog fa-fw"></i> Settings</a>
                             </li>
                         </ul>
                         <!-- /.nav-second-level -->

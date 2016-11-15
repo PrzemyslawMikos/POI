@@ -18,6 +18,10 @@ parameters:
     main_index_tables: 5
     # Points google geo language
     points_geo_language: 'en'
+    # Version control actions
+    add_action_version: 0
+    modify_action_version: 1
+    delete_action_version: 2
 
 framework:
     #esi:             ~
