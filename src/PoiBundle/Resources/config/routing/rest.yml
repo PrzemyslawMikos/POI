@@ -1,0 +1,4 @@
+rest_path:
+    path:     /path
+    defaults: { _controller: "PoiBundle:Rest:getUsers"}
+    methods:  GET

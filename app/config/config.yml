@@ -45,6 +45,8 @@ framework:
         gc_probability: 0
     fragments:       ~
     http_method_override: true
+    serializer:
+            enabled: true
 
 # Twig Configuration
 twig:
@@ -84,3 +86,28 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+# FosRest Configuration
+fos_rest:
+    view:
+        force_redirects:
+            html: true
+        formats:
+            json: true
+            xml: true
+        templating_formats:
+            html: true
+        view_response_listener: 'force'
+        formats:
+          json: true
+    format_listener:
+        rules:
+            - { path: ^/api/, priorities: [json], prefer_extension: false }
+            - { path: ^/, priorities: [html], prefer_extension: false }
+
+# JWT Auth Configuration
+lexik_jwt_authentication:
+    private_key_path: '%kernel.root_dir%/../var/jwt/private_key.pem'
+    public_key_path:  '%kernel.root_dir%/../var/jwt/public_key.pem'
+    pass_phrase:      "pajonki159951"
+    token_ttl:        3600

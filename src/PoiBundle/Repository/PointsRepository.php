@@ -41,4 +41,23 @@ class PointsRepository extends \Doctrine\ORM\EntityRepository
             return null;
         }
     }
+
+    public function findByIdRestResult($id)
+    {
+        $query = $this->getEntityManager()->createQueryBuilder();
+
+        $query
+            ->select('Point.id, Point.longitude, Point.latitude, Point.name, 
+                      Point.description, Point.picture, Point.mimetype, Point.addeddate')
+            ->from('PoiBundle:Points', 'Point')
+            ->where('Point.id = :id')
+            ->setParameter('id', $id);
+
+        try {
+            return $query->getQuery()->getResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
 }

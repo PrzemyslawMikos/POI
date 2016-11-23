@@ -50,5 +50,10 @@ poi_control:
     resource: "@PoiBundle/Resources/config/routing/control.yml"
     prefix: /control
 
+poi_api:
+    resource: "@PoiBundle/Controller/ApiController.php"
+    prefix: /api
+    type: rest
+
 logout:
   path: /logout

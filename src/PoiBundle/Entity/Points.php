@@ -3,6 +3,7 @@
 namespace PoiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use PoiBundle\Entity\Application\PointsAndroid;
 use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Points
@@ -10,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="points", indexes={@ORM\Index(name="FK_Points_Users_idx", columns={"User_Id"}), @ORM\Index(name="FK_Points_Types_idx", columns={"Type_Id"}), @ORM\Index(name="FK_Points_Administrators_idx", columns={"Accept_Id"})})
  * @ORM\Entity(repositoryClass="PoiBundle\Repository\PointsRepository")
  */
-class Points implements \Serializable
+class Points
 {
     /**
      * @var integer
@@ -115,6 +116,24 @@ class Points implements \Serializable
     private $user;
 
 
+    public function __construct()
+    {
+    }
+
+    public static function constructPointAndroid(PointsAndroid $pointAndroid)
+    {
+        $instance = new self();
+        $instance->longitude = $pointAndroid->getLongitude();
+        $instance->latitude = $pointAndroid->getLatitude();
+        $instance->name = $pointAndroid->getName();
+        $instance->description = $pointAndroid->getDescription();
+        $instance->picture = $pointAndroid->getPicture();
+        $instance->mimetype = $pointAndroid->getMimetype();
+        $instance->addeddate = new \DateTime();
+        $instance->accepted = false;
+        $instance->unblocked = true;
+        return $instance;
+    }
 
     /**
      * Set longitude
@@ -402,48 +421,4 @@ class Points implements \Serializable
         return $this->user;
     }
 
-    /**
-     * String representation of object
-     * @link http://php.net/manual/en/serializable.serialize.php
-     * @return string the string representation of the object or null
-     * @since 5.1.0
-     */
-    public function serialize()
-    {
-        return serialize(array(
-            $this->id,
-            $this->user,
-            $this->type,
-            $this->longitude,
-            $this->latitude,
-            $this->name,
-            $this->description,
-            $this->picture,
-            $this->addeddate,
-        ));
-    }
-
-    /**
-     * Constructs the object
-     * @link http://php.net/manual/en/serializable.unserialize.php
-     * @param string $serialized <p>
-     * The string representation of the object.
-     * </p>
-     * @return void
-     * @since 5.1.0
-     */
-    public function unserialize($serialized)
-    {
-        list (
-            $this->id,
-            $this->user,
-            $this->type,
-            $this->longitude,
-            $this->latitude,
-            $this->name,
-            $this->description,
-            $this->picture,
-            $this->addeddate,
-            ) = unserialize($serialized);
-    }
 }

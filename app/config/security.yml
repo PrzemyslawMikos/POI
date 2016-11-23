@@ -5,6 +5,8 @@ security:
     encoders:
         PoiBundle\Entity\Administrators:
           algorithm: bcrypt
+        PoiBundle\Entity\Users:
+          algorithm: bcrypt
 
     # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
     providers:
@@ -20,6 +22,22 @@ security:
     firewalls:
 
         # disables authentication for assets and the profiler, adapt it according to your needs
+        login:
+            pattern:  ^/api/token
+            stateless: true
+            anonymous: true
+            form_login:
+                check_path:               /api/token_check
+                success_handler:          lexik_jwt_authentication.handler.authentication_success
+                failure_handler:          lexik_jwt_authentication.handler.authentication_failure
+                require_previous_session: false
+
+        api:
+            pattern:   ^/api
+            stateless: true
+            guard:
+                authenticators:
+                    - 'jwt_token_authenticator'
 
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -41,10 +59,13 @@ security:
 
     role_hierarchy:
         ROLE_MASTER_ADMIN: ROLE_ADMIN
-
+# TODO work with access
     access_control:
+        - { path: ^/api/token, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY}
         - { path: ^/application, roles: IS_AUTHENTICATED_ANONYMOUSLY}
+        - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY}
         - { path: ^/administrators, roles: ROLE_MASTER_ADMIN}
         - { path: ^/registration, roles: ROLE_MASTER_ADMIN}
         - { path: ^/, roles: ROLE_ADMIN}
