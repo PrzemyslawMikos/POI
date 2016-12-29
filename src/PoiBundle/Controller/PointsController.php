@@ -146,8 +146,6 @@ class PointsController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($point);
             $em->flush();
-            // Modufy = 1
-            $this->AddChanges($point,  $this->getParameter('modify_action_version'));
             return $this->redirectToRoute('points_edit', array('id' => $point->getId()));
         }
 
@@ -168,8 +166,6 @@ class PointsController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($point);
             $em->flush($point);
-            // Delete = 2
-            $this->AddChanges($point,  $this->getParameter('delete_action_version'));
             $this->addFlash(
                 'success',
                 'Point blocked successfully');
@@ -201,8 +197,6 @@ class PointsController extends Controller
             $point->setAccepted(true);
             $em->persist($point);
             $em->flush();
-            // Add = 0
-            $this->AddChanges($point,  $this->getParameter('add_action_version'));
 
             return $this->redirectToRoute('points_edit', array('id' => $point->getId()));
         }
@@ -224,8 +218,6 @@ class PointsController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($point);
             $em->flush($point);
-            // Add = 0
-            $this->AddChanges($point,  $this->getParameter('add_action_version'));
             $this->addFlash(
                 'success',
                 'Point unblocked successfully');
@@ -251,8 +243,6 @@ class PointsController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->remove($point);
             $em->flush();
-            // Delete = 2
-            $this->AddChanges($point,  $this->getParameter('delete_action_version'));
         }
 
         return $this->redirectToRoute('points_index');
@@ -274,48 +264,4 @@ class PointsController extends Controller
         ;
     }
 
-    public function GetCurrentVersionAddIfFull(){
-        $em = $this->getDoctrine()->getManager();
-        $latest = $em->getRepository('PoiBundle:Versions')->findLatestResult();
-        if(empty($latest)){
-            $version = new Versions();
-            $version->setAddeddate(new \DateTime());
-            $version->setMembers(0);
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($version);
-            $em->flush();
-            return $em->getRepository('PoiBundle:Versions')->findLatestResult();
-        }
-        else{
-            $control = $em->getRepository('PoiBundle:Control')->find(1);
-            if($latest->getMembers() < $control->getTonextversion()){
-                return $latest;
-            }
-            else{
-                $version = new Versions();
-                $version->setAddeddate(new \DateTime());
-                $version->setMembers(0);
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($version);
-                $em->flush();
-                return $em->getRepository('PoiBundle:Versions')->findLatestResult();
-            }
-        }
-    }
-
-    public function AddChanges($point, $actionType){
-        $change = new Changes();
-        $currentVersion = $this->GetCurrentVersionAddIfFull();
-        $members = $currentVersion->getMembers();
-        $members++;
-        $currentVersion->setMembers($members);
-        $change->setPoint($point);
-        $change->setVersion($currentVersion);
-        $change->setDate(new \DateTime());
-        $change->setActiontype($actionType);
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($change);
-        $em->persist($currentVersion);
-        $em->flush();
-    }
 }

@@ -3,6 +3,7 @@
 namespace PoiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use PoiBundle\Entity\Application\UsersAndroid;
 use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * Users
@@ -86,6 +87,25 @@ class Users implements \Serializable, UserInterface
      * })
      */
     private $permission;
+
+
+    public function __construct()
+    {
+    }
+
+    public static function constructUserAndroid(UsersAndroid $userAndroid)
+    {
+        $instance = new self();
+        $instance->nickname = $userAndroid->getNickname();
+        $instance->email = $userAndroid->getEmail();
+        $instance->phone = $userAndroid->getPhone();
+        $instance->username = $userAndroid->getUsername();
+        $instance->creationdate = new \DateTime();
+        $instance->firstlogin = true;
+        $instance->unblocked = true;
+        return $instance;
+    }
+
 
     /**
      * Return string value of User

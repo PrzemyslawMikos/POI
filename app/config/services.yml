@@ -10,6 +10,9 @@ services:
       poi.types_uploader:
          class: PoiBundle\Additional\FileUploader
          arguments: ['%types_directory%']
+      poi.points_uploader:
+         class: PoiBundle\Additional\FileUploader
+         arguments: ['%points_directory%']
       jwt_token_authenticator:
           class: PoiBundle\Security\JwtTokenAuthenticator
           autowire: true

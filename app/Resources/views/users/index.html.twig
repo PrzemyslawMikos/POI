@@ -75,12 +75,12 @@
             <div class="btn-group" role="group">
                 <h5>Page {{ page }} of {{ users.pageCount }}</h5>
                 {% if page != 1 %}
-                    <a href="{{ path('user_index', {'page': page-1}) }}"><button class="btn btn-sm btn-default">Prev</button></a>
+                    <a href="{{ path('users_index', {'page': page-1}) }}"><button class="btn btn-sm btn-default">Prev</button></a>
                 {% else %}
                     <a href=""><button class="btn btn-sm btn-default disabled">Prev</button></a>
                 {% endif %}
                 {% if page != users.pageCount %}
-                    <a href="{{ path('user_index', {'page': page+1}) }}"><button class="btn btn-sm btn-default">Next</button></a>
+                    <a href="{{ path('users_index', {'page': page+1}) }}"><button class="btn btn-sm btn-default">Next</button></a>
                 {% else %}
                     <a href=""><button class="btn btn-sm btn-default disabled">Next</button></a>
                 {% endif %}
