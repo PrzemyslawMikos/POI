@@ -16,6 +16,11 @@
         <option name="fixed"/>
       </options>
     </field>
+    <field name="locality" type="string" column="Locality" length="90" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
     <field name="description" type="string" column="Description" length="300" nullable="false">
       <options>
         <option name="fixed"/>

@@ -46,6 +46,13 @@ class Points
     /**
      * @var string
      *
+     * @ORM\Column(name="Locality", type="string", length=90, nullable=false)
+     */
+    private $locality;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="Description", type="string", length=300, nullable=false)
      */
     private $description;
@@ -126,6 +133,7 @@ class Points
         $instance->longitude = $pointAndroid->getLongitude();
         $instance->latitude = $pointAndroid->getLatitude();
         $instance->name = $pointAndroid->getName();
+        $instance->locality = $pointAndroid->getLocality();
         $instance->description = $pointAndroid->getDescription();
         $instance->picture = $pointAndroid->getPicture();
         $instance->mimetype = $pointAndroid->getMimetype();
@@ -202,6 +210,29 @@ class Points
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set locality
+     *
+     * @param string $locality
+     * @return Points
+     */
+    public function setLocality($locality)
+    {
+
+        $this->locality = $locality;
+        return $this;
+    }
+
+    /**
+     * Get locality
+     *
+     * @return string
+     */
+    public function getLocality()
+    {
+        return $this->locality;
     }
 
     /**

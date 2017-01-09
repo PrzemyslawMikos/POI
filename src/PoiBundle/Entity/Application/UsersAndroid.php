@@ -12,7 +12,9 @@ namespace PoiBundle\Entity\Application;
 use PoiBundle\Entity\Users;
 use Symfony\Component\HttpFoundation\Request;
 use JMS\Serializer\Annotation\Type;
-
+/**
+ * Users Android class
+ */
 class UsersAndroid
 {
     private $id;

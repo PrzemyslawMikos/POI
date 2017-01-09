@@ -14,12 +14,14 @@ use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\AuthorizationHeaderTokenExtractor;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
+use PoiBundle\Additional\RestConstants;
 
 class JwtTokenAuthenticator extends AbstractGuardAuthenticator
 {
@@ -51,7 +53,7 @@ class JwtTokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function start(Request $request, AuthenticationException $authException = null)
     {
-        return new Response("No Token detected", Response::HTTP_NOT_ACCEPTABLE);
+        return new JsonResponse([RestConstants::STATUS => RestConstants::STATUS_BAD_TOKEN], Response::HTTP_UNAUTHORIZED);
     }
 
     /**
@@ -115,7 +117,7 @@ class JwtTokenAuthenticator extends AbstractGuardAuthenticator
             $data = $this->jwtEncoder->decode($credentials);
         }
         catch (JWTDecodeFailureException $e) {
-            throw new CustomUserMessageAuthenticationException('Invalid Token');
+            throw new CustomUserMessageAuthenticationException(new JsonResponse([RestConstants::STATUS => RestConstants::STATUS_BAD_TOKEN], Response::HTTP_UNAUTHORIZED));
         }
             $username = $data['username'];
             return $this->em
@@ -161,7 +163,7 @@ class JwtTokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-        return new Response("Bad JWT token", Response::HTTP_UNAUTHORIZED);
+        return new JsonResponse([RestConstants::STATUS => RestConstants::STATUS_TOKEN_EXPIRED], Response::HTTP_UNAUTHORIZED);
     }
 
     /**

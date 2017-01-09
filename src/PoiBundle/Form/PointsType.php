@@ -19,6 +19,7 @@ class PointsType extends AbstractType
             ->add('longitude')
             ->add('latitude')
             ->add('name')
+            ->add('locality')
             ->add('description')
             //->add('picture')
             ->add('addeddate', DateType::class)

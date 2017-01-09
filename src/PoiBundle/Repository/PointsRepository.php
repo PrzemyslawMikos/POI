@@ -47,11 +47,31 @@ class PointsRepository extends \Doctrine\ORM\EntityRepository
         $query = $this->getEntityManager()->createQueryBuilder();
 
         $query
-            ->select('Point.id, Point.longitude, Point.latitude, Point.name, 
-                      Point.description, Point.picture, Point.mimetype, Point.addeddate')
+            ->select('Point')
             ->from('PoiBundle:Points', 'Point')
             ->where('Point.id = :id')
             ->setParameter('id', $id);
+
+        try {
+            return $query->getQuery()->getResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return null;
+        }
+    }
+
+    public function findByCriteriaRestResult($typeid, $locality, $limit, $offset){
+        $query = $this->getEntityManager()->createQueryBuilder();
+
+        $query
+            ->select('Point')
+            ->from('PoiBundle:Points', 'Point')
+            ->innerJoin('Point.type', 'Type')
+            ->where('Type.id = :typeid')
+            ->andWhere('Point.locality LIKE :locality')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->setParameter('typeid', $typeid)
+            ->setParameter('locality', $locality);
 
         try {
             return $query->getQuery()->getResult();

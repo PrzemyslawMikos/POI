@@ -18,6 +18,8 @@ class PointsAndroid
 
     private $name;
 
+    private $locality;
+
     private $description;
 
     private $picture;
@@ -43,6 +45,7 @@ class PointsAndroid
         $instance->longitude = $point->getLongitude();
         $instance->latitude = $point->getLatitude();
         $instance->name = $point->getName();
+        $instance->locality = $point->getLocality();
         $instance->description = $point->getDescription();
         $instance->picture = $point->getPicture();
         $instance->mimetype = $point->getMimetype();
@@ -59,6 +62,7 @@ class PointsAndroid
         $instance->longitude = $request->get('longitude');
         $instance->latitude = $request->get('latitude');
         $instance->name = $request->get('name');
+        $instance->locality = $request->get('locality');
         $instance->description = $request->get('description');
         $instance->picture = $request->get('picture');
         $instance->mimetype = $request->get('mimetype');
@@ -101,6 +105,18 @@ class PointsAndroid
     public function getName()
     {
         return $this->name;
+    }
+
+    public function setLocality($locality)
+    {
+        $this->locality= $locality;
+
+        return $this;
+    }
+
+    public function getLocality()
+    {
+        return $this->locality;
     }
 
     public function setDescription($description)
