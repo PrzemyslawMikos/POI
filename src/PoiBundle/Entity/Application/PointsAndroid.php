@@ -16,6 +16,8 @@ class PointsAndroid
 
     private $latitude;
 
+    private $rating;
+
     private $name;
 
     private $locality;
@@ -34,6 +36,8 @@ class PointsAndroid
 
     private $userid;
 
+    private $distance;
+
     public function __construct()
     {
     }
@@ -44,6 +48,7 @@ class PointsAndroid
         $instance->id = $point->getId();
         $instance->longitude = $point->getLongitude();
         $instance->latitude = $point->getLatitude();
+        $instance->rating = $point->getRating();
         $instance->name = $point->getName();
         $instance->locality = $point->getLocality();
         $instance->description = $point->getDescription();
@@ -61,6 +66,7 @@ class PointsAndroid
         $instance->id = null;
         $instance->longitude = $request->get('longitude');
         $instance->latitude = $request->get('latitude');
+        $instance->rating = $request->get('rating');
         $instance->name = $request->get('name');
         $instance->locality = $request->get('locality');
         $instance->description = $request->get('description');
@@ -93,6 +99,16 @@ class PointsAndroid
     public function getLatitude()
     {
         return $this->latitude;
+    }
+
+    public function getRating()
+    {
+        return $this->rating;
+    }
+
+    public function setRating($rating)
+    {
+        $this->rating = $rating;
     }
 
     public function setName($name)
@@ -189,6 +205,16 @@ class PointsAndroid
     public function getUserid()
     {
         return $this->userid;
+    }
+
+    public function getDistance()
+    {
+        return $this->distance;
+    }
+
+    public function setDistance($distance)
+    {
+        $this->distance = $distance;
     }
 
 }

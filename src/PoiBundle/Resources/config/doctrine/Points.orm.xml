@@ -9,8 +9,8 @@
     <id name="id" type="integer" column="Id">
       <generator strategy="IDENTITY"/>
     </id>
-    <field name="longitude" type="decimal" column="Longitude" precision="12" scale="9" nullable="false"/>
-    <field name="latitude" type="decimal" column="Latitude" precision="12" scale="9" nullable="false"/>
+    <field name="longitude" type="decimal" column="Longitude" precision="10" scale="7" nullable="false"/>
+    <field name="latitude" type="decimal" column="Latitude" precision="10" scale="7" nullable="false"/>
     <field name="name" type="string" column="Name" length="150" nullable="false">
       <options>
         <option name="fixed"/>
@@ -21,6 +21,7 @@
         <option name="fixed"/>
       </options>
     </field>
+    <field name="rating" type="decimal" column="Rating" precision="2" scale="1" nullable="true"/>
     <field name="description" type="string" column="Description" length="300" nullable="false">
       <options>
         <option name="fixed"/>

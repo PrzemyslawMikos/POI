@@ -4,14 +4,16 @@ namespace PoiBundle\Controller;
 
 use FOS\RestBundle\Controller\FOSRestController;
 use PoiBundle\Additional\RestConstants;
+use PoiBundle\Entity\Application\RatingsAndroid;
 use PoiBundle\Entity\Application\TypesAndroid;
 use PoiBundle\Entity\Application\UsersAndroid;
+use PoiBundle\Entity\Application\PointsAndroid;
+use PoiBundle\Entity\Ratings;
 use PoiBundle\Entity\Users;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use PoiBundle\Entity\Points;
-use PoiBundle\Entity\Application\PointsAndroid;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\Get;
 
@@ -78,7 +80,7 @@ class ApiController extends FOSRestController
             $userAndroid = UsersAndroid::constructUser($user);
             return $userAndroid;
         }
-            catch (\Exception $e){
+        catch (\Exception $e){
             return new JsonResponse([RestConstants::STATUS => RestConstants::STATUS_INTERNAL_SERVER_ERROR], Response::HTTP_BAD_REQUEST);
         }
     }
@@ -152,9 +154,20 @@ class ApiController extends FOSRestController
             $em = $this->getDoctrine()->getManager();
             $em->persist($point);
             $em->flush();
+
+            $newRating = new Ratings();
+            $newRating->setUser($point->getUser());
+            $newRating->setPoint($point);
+            $newRating->setRating($pointAndroid->getRating());
+            $newRating->setRatedate(new \DateTime());
+            $em->persist($newRating);
+            $em->flush();
+
+            $this->recalculateRating($point->getId());
+
             return new JsonResponse([RestConstants::STATUS => RestConstants::STATUS_OK], Response::HTTP_OK);
         }
-            catch (\Exception $e){
+        catch (\Exception $e){
             return new JsonResponse([RestConstants::STATUS => RestConstants::STATUS_INTERNAL_SERVER_ERROR], Response::HTTP_BAD_REQUEST);
         }
     }
@@ -178,7 +191,7 @@ class ApiController extends FOSRestController
             }
             return $typesAndroid;
         }
-            catch (\Exception $e){
+        catch (\Exception $e){
             return new JsonResponse([RestConstants::STATUS => RestConstants::STATUS_INTERNAL_SERVER_ERROR], Response::HTTP_BAD_REQUEST);
         }
     }
@@ -186,7 +199,7 @@ class ApiController extends FOSRestController
     //TODO dodać więcej opcji filtrowania!
     /**
      * Zwraca punkty z odpowiednimi wymaganiami
-     * Jeśli locality = * wtedy znajedzie wszystkie punkty danego typu niezależnie od miejscowośći
+     * Jeśli locality == '*' znajedzie wszystkie punkty danego typu niezależnie od miejscowośći
      *
      * @Get("/points/{typeid}/{locality}/{limit}/{offset}")
      */
@@ -209,8 +222,79 @@ class ApiController extends FOSRestController
                 return $pointsAndroid;
             }
         }
-            catch (\Exception $e){
+        catch (\Exception $e){
             return new JsonResponse([RestConstants::STATUS => RestConstants::STATUS_INTERNAL_SERVER_ERROR], Response::HTTP_BAD_REQUEST);
         }
+    }
+    /**
+     * Zwraca punkty z zakresu odległości
+     *
+     * @Get("/points/{userLatitude}/{userLongitude}/{distance}")
+     */
+    public function getPointsByDistanceAction($userLatitude, $userLongitude, $distance){
+        //try {
+            $points = $this->getDoctrine()->getRepository('PoiBundle:Points')->findByDistanceResult($userLatitude, $userLongitude, $distance);
+            if (!isset($points) or empty($points) or is_null($points)) {
+                return new JsonResponse([RestConstants::STATUS => RestConstants::STATUS_NOT_FOUND], Response::HTTP_NOT_FOUND);
+            }
+            else{
+                return $points;
+            }
+//        }
+//        catch (\Exception $e){
+//            return new JsonResponse([RestConstants::STATUS => RestConstants::STATUS_INTERNAL_SERVER_ERROR], Response::HTTP_BAD_REQUEST);
+//        }
+    }
+
+    /**
+     * Ocena punktu
+     *
+     * Przykład żądania:
+     * {
+     *  "rating":"4.5",
+     *  "pointid":4,
+     *  "userid":1
+     * }
+     *
+     * @Post("/rating")
+     */
+    public function postRatingPointAction(Request $request){
+        try{
+            $ratingAndroid = RatingsAndroid::constructRequest($request);
+            $rating = $this->getDoctrine()->getRepository('PoiBundle:Ratings')->findOneBy(array('point' => $ratingAndroid->getPointid(), 'user' => $ratingAndroid->getUserid()));
+            if(!$rating){
+                $newRating = new Ratings();
+                $newRating->setUser($this->getDoctrine()->getRepository('PoiBundle:Users')->find($ratingAndroid->getUserid()));
+                $newRating->setPoint($this->getDoctrine()->getRepository('PoiBundle:Points')->find($ratingAndroid->getPointid()));
+                $newRating->setRating($ratingAndroid->getRating());
+                $newRating->setRatedate(new \DateTime());
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($newRating);
+                $em->flush();
+                $response = new JsonResponse([RestConstants::STATUS => RestConstants::STATUS_NEW], Response::HTTP_OK);
+            }
+            else{
+                $rating->setRating($ratingAndroid->getRating());
+                $rating->setRatedate(new \DateTime());
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($rating);
+                $em->flush();
+                $response = new JsonResponse([RestConstants::STATUS => RestConstants::STATUS_UPDATED], Response::HTTP_OK);
+            }
+            $this->recalculateRating($ratingAndroid->getPointid());
+            return $response;
+        }
+        catch (\Exception $e){
+            return new JsonResponse([RestConstants::STATUS => RestConstants::STATUS_INTERNAL_SERVER_ERROR], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    private function recalculateRating($pointid){
+        $avargeRating = $this->getDoctrine()->getRepository('PoiBundle:Ratings')->getAvargeRating($pointid);
+        $point = $this->getDoctrine()->getRepository('PoiBundle:Points')->find($pointid);
+        $point->setRating($avargeRating);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($point);
+        $em->flush();
     }
 }

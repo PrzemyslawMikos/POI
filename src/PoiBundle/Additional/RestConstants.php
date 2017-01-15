@@ -22,6 +22,8 @@ class RestConstants
     const STATUS_NOT_FOUND = "NOT_FOUND";
     const STATUS_TOKEN_EXPIRED = "TOKEN_EXPIRED";
     const STATUS_BAD_TOKEN = "BAD_TOKEN";
+    const STATUS_NEW = "NEW";
+    const STATUS_UPDATED = "UPDATED";
 
     const JSON_USER_ID = "userid";
     const JSON_TOKEN = "token";

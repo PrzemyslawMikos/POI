@@ -53,6 +53,13 @@ class Points
     /**
      * @var string
      *
+     * @ORM\Column(name="Rating", type="decimal", precision=2, scale=1, nullable=true)
+     */
+    private $rating;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="Description", type="string", length=300, nullable=false)
      */
     private $description;
@@ -187,6 +194,29 @@ class Points
     public function getLatitude()
     {
         return $this->latitude;
+    }
+
+    /**
+     * Set rating
+     *
+     * @param string $rating
+     * @return Points
+     */
+    public function setRating($rating)
+    {
+        $this->rating = $rating;
+
+        return $this;
+    }
+
+    /**
+     * Get rating
+     *
+     * @return string
+     */
+    public function getRating()
+    {
+        return $this->rating;
     }
 
     /**
