@@ -5,19 +5,16 @@ namespace PoiBundle\Controller;
 use PoiBundle\Additional\PaginationHelper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use PoiBundle\Entity\Administrators;
 use PoiBundle\Form\AdministratorsType;
 
-/**
- * Administrators controller.
- *
- */
+
 class AdministratorsController extends Controller
 {
+
     /**
-     * Lists all Administrators entities.
-     *
+     * @Security("is_granted('VIEW')")
      */
     public function indexAction($page = 1)
     {
@@ -33,32 +30,7 @@ class AdministratorsController extends Controller
     }
 
     /**
-     * Creates a new Administrators entity.
-     *
-     */
-    public function newAction(Request $request)
-    {
-        $administrator = new Administrators();
-        $form = $this->createForm('PoiBundle\Form\AdministratorsType', $administrator);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($administrator);
-            $em->flush();
-
-            return $this->redirectToRoute('administrators_show', array('id' => $administrator->getId()));
-        }
-
-        return $this->render('administrators/new.html.twig', array(
-            'administrator' => $administrator,
-            'form' => $form->createView(),
-        ));
-    }
-
-    /**
-     * Finds and displays a Administrators entity.
-     *
+     * @Security("is_granted('VIEW', administrator)")
      */
     public function showAction(Administrators $administrator)
     {
@@ -71,8 +43,7 @@ class AdministratorsController extends Controller
     }
 
     /**
-     * Displays a form to edit an existing Administrators entity.
-     *
+     * @Security("is_granted('EDIT', administrator)")
      */
     public function editAction(Request $request, Administrators $administrator)
     {

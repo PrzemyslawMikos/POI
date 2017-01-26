@@ -11,7 +11,7 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <h4 class="text-center">
-                        Informations
+                        Dane
                     </h4>
                     <div class="table-responsive view-table">
                         <table class="table table-bordered">
@@ -21,19 +21,19 @@
                                 <td>{{ administrator.id }}</td>
                             </tr>
                             <tr>
-                                <th>Role:</th>
+                                <th>Uprawnienia:</th>
                                 <td>{{ administrator.role.name}}</td>
                             </tr>
                             <tr>
-                                <th>First name:</th>
+                                <th>Imię:</th>
                                 <td>{{ administrator.firstname }}</td>
                             </tr>
                             <tr>
-                                <th>Last name:</th>
+                                <th>Nazwisko:</th>
                                 <td>{{ administrator.lastname}}</td>
                             </tr>
                             <tr>
-                                <th>Phone:</th>
+                                <th>Telefon:</th>
                                 <td>{{ administrator.phone }}</td>
                             </tr>
                             <tr>
@@ -41,7 +41,7 @@
                                 <td>{{ administrator.email }}</td>
                             </tr>
                             <tr>
-                                <th>Username:</th>
+                                <th>Nazwa użytkownika:</th>
                                 <td>{{ administrator.username }}</td>
                             </tr>
                             {% if administrator.unblocked %}
@@ -51,86 +51,32 @@
                                 {% endif %}
                                 <th>Status:</th>
                                 {% if administrator.unblocked %}
-                                    <td><i class="fa fa-check fa-fw"></i> Active</td>
+                                    <td><i class="fa fa-check fa-fw"></i> Aktywny</td>
                                 {% else %}
-                                    <td><i class="fa fa-ban fa-fw"></i> Blocked</td>
+                                    <td><i class="fa fa-ban fa-fw"></i> Zablokowany</td>
                                 {% endif %}
                             </tr>
                             </tbody>
                         </table>
                     </div>
+                    {% if is_granted('ROLE_MASTER_ADMIN') %}
                     <div class="row">
                         <div class="col-lg-12">
                             {{ form_start(delete_form) }}
-                            <a href="{{ path('administrators_index') }}"><button type="button" class="btn btn-sm btn-default"><i class="fa fa-reply"></i> All</button></a>
-                            <a href="{{ path('administrators_edit', { 'id': administrator.id }) }}"><button type="button" class="btn btn-sm btn-primary"><i class="fa fa-pencil"></i> Edit</button></a>
+                            <a href="{{ path('administrators_index') }}"><button type="button" class="btn btn-sm btn-default"><i class="fa fa-reply"></i> Wszystkie</button></a>
+                            <a href="{{ path('administrators_edit', { 'id': administrator.id }) }}"><button type="button" class="btn btn-sm btn-primary"><i class="fa fa-pencil"></i> Edytuj</button></a>
                             {% if administrator.unblocked %}
-                                <a href="{{ path('administrators_block', { 'id': administrator.id, 'page' : 1 }) }}"><button type="button" class="btn btn-sm btn-warning"><i class="fa fa-lock"></i> Block</button></a>
+                                <a href="{{ path('administrators_block', { 'id': administrator.id, 'page' : 1 }) }}"><button type="button" class="btn btn-sm btn-warning"><i class="fa fa-lock"></i> Zablokuj</button></a>
                             {% else %}
-                                <a href="{{ path('administrators_unblock', { 'id': administrator.id, 'page' : 1 }) }}"><button type="button" class="btn btn-sm btn-warning"><i class="fa fa-unlock"></i> Active</button></a>
+                                <a href="{{ path('administrators_unblock', { 'id': administrator.id, 'page' : 1 }) }}"><button type="button" class="btn btn-sm btn-warning"><i class="fa fa-unlock"></i> Odblokuj</button></a>
                             {% endif %}
-                            <button type="submit" class="btn btn-sm btn-danger"><i class="fa fa-times fa-fw"></i> Delete </button>
+                            <button type="submit" class="btn btn-sm btn-danger"><i class="fa fa-times fa-fw"></i> Usuń </button>
                             {{ form_end(delete_form) }}
                         </div>
                     </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
-    {#<h1>Administrators</h1>
-
-    <table>
-        <tbody>
-            <tr>
-                <th>Firstname</th>
-                <td>{{ administrator.firstname }}</td>
-            </tr>
-            <tr>
-                <th>Lastname</th>
-                <td>{{ administrator.lastname }}</td>
-            </tr>
-            <tr>
-                <th>Phone</th>
-                <td>{{ administrator.phone }}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{ administrator.email }}</td>
-            </tr>
-            <tr>
-                <th>Username</th>
-                <td>{{ administrator.username }}</td>
-            </tr>
-            <tr>
-                <th>Password</th>
-                <td>{{ administrator.password }}</td>
-            </tr>
-            <tr>
-                <th>Firstlogin</th>
-                <td>{% if administrator.firstlogin %}Yes{% else %}No{% endif %}</td>
-            </tr>
-            <tr>
-                <th>Unblocked</th>
-                <td>{% if administrator.unblocked %}Yes{% else %}No{% endif %}</td>
-            </tr>
-            <tr>
-                <th>Id</th>
-                <td>{{ administrator.id }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <ul>
-        <li>
-            <a href="{{ path('administrators_index') }}">Back to the list</a>
-        </li>
-        <li>
-            <a href="{{ path('administrators_edit', { 'id': administrator.id }) }}">Edit</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>#}
 {% endblock %}

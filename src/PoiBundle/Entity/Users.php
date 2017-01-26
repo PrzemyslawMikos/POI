@@ -3,14 +3,15 @@
 namespace PoiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use PoiBundle\Entity\Application\UsersAndroid;
+use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * Users
  *
  * @ORM\Table(name="users", indexes={@ORM\Index(name="FK_Users_Permissions_idx", columns={"Permission_Id"})}, uniqueConstraints={@ORM\UniqueConstraint(name="Username_UNIQUE", columns={"Username"}), @ORM\UniqueConstraint(name="Nickname_UNIQUE", columns={"Nickname"})})
  * @ORM\Entity
  */
-class Users implements \Serializable
+class Users implements \Serializable, UserInterface
 {
     /**
      * @var integer
@@ -86,6 +87,25 @@ class Users implements \Serializable
      * })
      */
     private $permission;
+
+
+    public function __construct()
+    {
+    }
+
+    public static function constructUserAndroid(UsersAndroid $userAndroid)
+    {
+        $instance = new self();
+        $instance->nickname = $userAndroid->getNickname();
+        $instance->email = $userAndroid->getEmail();
+        $instance->phone = $userAndroid->getPhone();
+        $instance->username = $userAndroid->getUsername();
+        $instance->creationdate = new \DateTime();
+        $instance->firstlogin = true;
+        $instance->unblocked = true;
+        return $instance;
+    }
+
 
     /**
      * Return string value of User
@@ -347,4 +367,20 @@ class Users implements \Serializable
             $this->unblocked,
             ) = unserialize($serialized);
     }
+
+    public function getRoles()
+    {
+        $permission = $this->getPermission();
+        return array($permission->getName());
+    }
+
+    public function getSalt()
+    {
+        // TODO: Implement getSalt() method.
+    }
+
+    public function eraseCredentials()
+    {
+    }
+
 }

@@ -6,7 +6,7 @@ imports:
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    locale: en
+    locale: pl
     # File directories
     types_directory: '%kernel.root_dir%/../web/uploads/types'
     points_directory: '%kernel.root_dir%/../web/uploads/points'
@@ -14,14 +14,11 @@ parameters:
     type_index_elements: 9
     administrators_index_elements: 20
     points_index_elements: 20
+    users_index_elements: 20
     # Table counts
     main_index_tables: 5
     # Points google geo language
     points_geo_language: 'en'
-    # Version control actions
-    add_action_version: 0
-    modify_action_version: 1
-    delete_action_version: 2
 
 framework:
     #esi:             ~
@@ -45,6 +42,8 @@ framework:
         gc_probability: 0
     fragments:       ~
     http_method_override: true
+    serializer:
+            enabled: true
 
 # Twig Configuration
 twig:
@@ -84,3 +83,30 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+# FosRest Configuration
+fos_rest:
+    view:
+        force_redirects:
+            html: true
+        formats:
+            json: true
+            xml: true
+        templating_formats:
+            html: true
+        view_response_listener: 'force'
+        mime_types:
+            json: ['application/json; charset=UTF-8', 'application/json']
+        formats:
+          json: true
+    format_listener:
+        rules:
+            - { path: ^/api/, priorities: [json], prefer_extension: false }
+            - { path: ^/, priorities: [html], prefer_extension: false }
+
+# JWT Auth Configuration
+lexik_jwt_authentication:
+    private_key_path: '%kernel.root_dir%/../var/jwt/private_key.pem'
+    public_key_path:  '%kernel.root_dir%/../var/jwt/public_key.pem'
+    pass_phrase:      "pajonki159951"
+    token_ttl:        3600

@@ -2,14 +2,11 @@
 
 namespace PoiBundle\Controller;
 
+use Doctrine\DBAL\Types\TextType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * Main controller.
- *
- */
 class MainController extends Controller
 {
 
@@ -24,7 +21,6 @@ class MainController extends Controller
     }
 
     public function indexAction(){
-        //$this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page!');
 
         //Active points (accepted = true, unblocked = true)
         $active_points = $this->getDoctrine()->getRepository('PoiBundle:Points')->findBy(array('unblocked' => true, 'accepted' =>true), array(), $this->getParameter('main_index_tables'), array());
@@ -62,4 +58,31 @@ class MainController extends Controller
             )
         );
     }
+
+    public function searchAction(Request $request){
+        $data = array();
+        $searchForm = $this->createFormBuilder($data)
+            ->add('search_value')
+            ->getForm();
+
+        if ($request->isMethod('POST')) {
+            $searchForm->handleRequest($request);
+            $data = $searchForm->getData();
+            $searchValue = $data['search_value'];
+            $searchValue = '%'.$searchValue.'%';
+
+            $points = $this->getDoctrine()->getRepository('PoiBundle:Points')->searchAllLikeResult($searchValue);
+            $users = $this->getDoctrine()->getRepository('PoiBundle:Users')->searchAllLikeResult($searchValue);
+
+            return $this->render('main/search.html.twig',
+                array(
+                    'search_value' => $data['search_value'],
+                    'points' => $points,
+                    'users' => $users
+                )
+            );
+        }
+        return $this->render('main/search_form.html.twig', array('search_form' => $searchForm->createView()));
+    }
+
 }

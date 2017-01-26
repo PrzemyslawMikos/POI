@@ -1,0 +1,10 @@
+<form action="{{ path('main_search') }}" method="post">
+    <div class="input-group custom-search-form">
+        {{ form_widget(search_form.search_value, {'attr' : {'class' : 'form-control', 'placeholder' : 'Wpisz czego szukasz...'}}) }}
+        <span class="input-group-btn">
+            <button class="btn btn-default" type="submit">
+                <i class="fa fa-search"></i>
+            </button>
+        </span>
+    </div>
+</form>

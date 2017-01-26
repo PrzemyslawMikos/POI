@@ -12,8 +12,8 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-lg-6 text-center">
-                            <h4>Picture</h4>
-                            <img type="button" class="image-max" src="{{ asset(points_directory ~ point.picture) }}" data-toggle="modal" data-target="#img1">
+                            <h4>Zdjęcie</h4>
+                            <img class="image-max" src="{{ asset(points_directory ~ point.picture) }}" data-toggle="modal" data-target="#img1">
                             <div id="img1" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                                 <div class="modal-dialog modal-lg" role="document">
                                     <div class="modal-content">
@@ -29,7 +29,7 @@
                             </div>
                         </div>
                         <div class="col-lg-6 ">
-                            <h4 class="text-center">Informations</h4>
+                            <h4 class="text-center">Informacje</h4>
                             <div class="table-responsive view-table">
                                 <table class="table">
                                     <tbody>
@@ -38,27 +38,35 @@
                                         <td>{{ point.id }}</td>
                                     </tr>
                                     <tr>
-                                        <th>Name:</th>
+                                        <th>Nazwa:</th>
                                         <td>{{ point.name }}</td>
                                     </tr>
                                     <tr>
-                                        <th>Description:</th>
+                                        <th>Ocena:</th>
+                                        <td>{{ point.rating }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Lokalizacja:</th>
+                                        <td>{{ point.locality }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Opis:</th>
                                         <td>{{ point.description }}</td>
                                     </tr>
                                     <tr>
-                                        <th>Longitude:</th>
+                                        <th>Długość geo.:</th>
                                         <td>{{ point.longitude }}</td>
                                     </tr>
                                     <tr>
-                                        <th>Latitude:</th>
+                                        <th>Szerokość geo.:</th>
                                         <td>{{ point.latitude }}</td>
                                     </tr>
                                     <tr>
-                                        <th>Added:</th>
+                                        <th>Data dodania:</th>
                                         <td>{{ point.addeddate|date('Y-m-d,  H:i:s') }}</td>
                                     </tr>
                                     <tr>
-                                        <th>MimeType:</th>
+                                        <th>Format zdjęcia:</th>
                                         <td>{{ point.mimetype}}</td>
                                     </tr>
                                     </tbody>
@@ -70,9 +78,9 @@
                     <div class="row">
                         <div class="col-lg-12">
                             {{ form_start(delete_form) }}
-                            <a href="{{ path('points_index') }}"><button type="button" class="btn btn-sm btn-default"><i class="fa fa-reply"></i> All</button></a>
-                            <a href="{{ path('points_edit', { 'id': point.id }) }}"><button type="button" class="btn btn-sm btn-primary"><i class="fa fa-pencil"></i> Edit</button></a>
-                            <button type="submit" class="btn btn-sm btn-danger"><i class="fa fa-times fa-fw"></i> Delete </button>
+                            <a href="{{ path('points_index') }}"><button type="button" class="btn btn-sm btn-default"><i class="fa fa-reply"></i> Wszystkie</button></a>
+                            <a href="{{ path('points_edit', { 'id': point.id }) }}"><button type="button" class="btn btn-sm btn-primary"><i class="fa fa-pencil"></i> Edytuj</button></a>
+                            <button type="submit" class="btn btn-sm btn-danger"><i class="fa fa-times fa-fw"></i> Usuń</button>
                             {{ form_end(delete_form) }}
                         </div>
                     </div>
@@ -83,33 +91,70 @@
             <div class="panel panel-info">
                 <div class="panel-body">
                     <div class="col-lg-12 ">
-                        <h4 class="text-center"><a href="{{ path('users_show', {'id': point.user.id }) }}"><i class="fa fa-user fa-fw"></i> User informations</a></h4>
+                        <h4 class="text-center"><a href="{{ path('users_show', {'id': point.user.id }) }}"><i class="fa fa-user fa-fw"></i> Informacje o użytkowniku</a></h4>
                         <div class="table-responsive view-table-info">
                             <table class="table">
                                 <tbody>
                                 <tr>
-                                    <th>Nickname:</th>
+                                    <th>Nick:</th>
                                     <td>{{ point.user.nickname}}</td>
                                 </tr>
                                 <tr>
-                                    <th>Username:</th>
+                                    <th>Nazwa użytkownika:</th>
                                     <td>{{ point.user.username }}</td>
                                 </tr>
                                 <tr>
                                     <th>E-mail:</th>
                                     <td>{{ point.user.email }}</td>
                                 </tr>
-                                {% if point.user.unblocked %}
+                                    {% if point.user.unblocked %}
                                 <tr class="success">
                                     <th>Status:</th>
-                                    <td><i class="fa fa-check fa-fw"></i> Active</td>
+                                    <td><i class="fa fa-check fa-fw"></i> Aktywny</td>
                                     {% else %}
                                 <tr class="danger">
                                     <th>Status:</th>
-                                    <td><i class="fa fa-ban fa-fw"></i> Blocked</td>
+                                    <td><i class="fa fa-ban fa-fw"></i> Zablokowany</td>
                                     {% endif %}
                                 </tr>
                                 </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-body">
+                    <div class="col-lg-12 ">
+                        <h4 class="text-center"><a href="{{ path('types_show', {'id': point.type.id }) }}"><i class="fa fa-bank fa-fw"></i> Kategoria</a></h4>
+                        <div class="table-responsive view-table-info">
+                            <table class="table">
+                                <tr>
+                                    <th>Ocena:</th>
+                                    <td>{{ point.type.name}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Opis:</th>
+                                    <td>{{ point.type.description}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Data dodania:</th>
+                                    <td>{{ point.type.addeddate|date('Y-m-d,  H:i:s') }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Dodał:</th>
+                                    <td> <a href="{{ path('administrators_show', { 'id': point.type.creator.id}) }}">{{ point.type.creator.firstname }}  {{ point.type.creator.lastname }}</a></td>
+                                </tr>
+                                {% if point.user.unblocked %}
+                                <tr class="success">
+                                    <th>Status:</th>
+                                    <td><i class="fa fa-check fa-fw"></i> Aktywny</td>
+                                    {% else %}
+                                <tr class="danger">
+                                    <th>Status:</th>
+                                    <td><i class="fa fa-ban fa-fw"></i> Zablokowany</td>
+                                    {% endif %}
+                                </tr>
                             </table>
                         </div>
                     </div>
@@ -121,12 +166,52 @@
         <div class="col-lg-12">
             <div class="panel panel-info">
                 <div class="panel panel-heading">
-                    <i class="fa fa-google" aria-hidden="true"></i> | Address: {{ address }}
+                    <i class="fa fa-google" aria-hidden="true"></i> | Adres według Google: <b>{{ address }}</b>
                 </div>
                 <div class="panel panel-body map-panel">
                     <div id="map" class="map"></div>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <h2 class="page-header"><i class="fa fa-star fa-fw"></i> Oceny | Średnia ocena:  {{ point.rating }}</h2>
+        </div>
+    </div>
+    <div class="col-lg-12 ">
+        <div class="table-responsive view-table-info">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Ocena</th>
+                    <th>Użytkownik</th>
+                    <th>Data</th>
+                    <th>Opcje</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for rating in point.getRatings() %}
+                    <tr>
+                        <td>
+                            {{ rating.id }}
+                        </td>
+                        <td>
+                            {{ rating.rating }}
+                        </td>
+                        <td>
+                            <a href="{{ path('users_show', { 'id': rating.user.id}) }}">{{ rating.user.nickname }}</a>
+                        </td>
+                        <td>
+                            {{ rating.ratedate|date('Y-m-d,  H:i:s') }}
+                        </td>
+                        <td>Opcje</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+                </tbody>
+            </table>
         </div>
     </div>
     <script src="{{ asset('bundles/dashboard/dist/js/own_dashboard.js') }}"></script>

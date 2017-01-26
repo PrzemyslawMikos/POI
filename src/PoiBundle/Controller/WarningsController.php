@@ -4,14 +4,9 @@ namespace PoiBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
 use PoiBundle\Entity\Warnings;
 use PoiBundle\Form\WarningsType;
 
-/**
- * Warnings controller.
- *
- */
 class WarningsController extends Controller
 {
     /**

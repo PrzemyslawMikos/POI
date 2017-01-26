@@ -17,10 +17,6 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use PoiBundle\Controller\ChangesController;
 use Symfony\Component\Validator\Constraints\DateTime;
 
-/**
- * Points controller.
- *
- */
 class PointsController extends Controller
 {
 
@@ -42,10 +38,6 @@ class PointsController extends Controller
         ));
     }
 
-    /**
-     * Lists enabled Points entities.
-     *
-     */
     public function enabledAction($page = 1)
     {
         $query = $this->getDoctrine()->getRepository('PoiBundle:Points')->findAcceptedAndUnblockedQuery(true, true);
@@ -59,10 +51,6 @@ class PointsController extends Controller
         ));
     }
 
-    /**
-     * Lists disabled Points entities.
-     *
-     */
     public function disabledAction($page = 1)
     {
         $query = $this->getDoctrine()->getRepository('PoiBundle:Points')->findAcceptedAndUnblockedQuery(true, false);
@@ -76,10 +64,6 @@ class PointsController extends Controller
         ));
     }
 
-    /**
-     * Lists acceptable Points entities.
-     *
-     */
     public function acceptableAction($page = 1)
     {
         $query = $this->getDoctrine()->getRepository('PoiBundle:Points')->findAcceptedAndUnblockedQuery(false, true);
@@ -93,34 +77,6 @@ class PointsController extends Controller
         ));
     }
 
-    /**
-     * Creates a new Points entity.
-     *
-     */
-    public function newAction(Request $request)
-    {
-        $point = new Points();
-        $form = $this->createForm('PoiBundle\Form\PointsType', $point);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($point);
-            $em->flush();
-
-            return $this->redirectToRoute('points_show', array('id' => $point->getId()));
-        }
-
-        return $this->render('points/new.html.twig', array(
-            'point' => $point,
-            'form' => $form->createView(),
-        ));
-    }
-
-    /**
-     * Finds and displays a Points entity.
-     *
-     */
     public function showAction(Points $point)
     {
         $deleteForm = $this->createDeleteForm($point);
@@ -132,23 +88,51 @@ class PointsController extends Controller
         ));
     }
 
-    /**
-     * Displays a form to edit an existing Points entity.
-     *
-     */
     public function editAction(Request $request, Points $point)
     {
         $deleteForm = $this->createDeleteForm($point);
         $editForm = $this->createForm('PoiBundle\Form\PointsType', $point);
+        $oldImage = $point->getPicture();
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($point);
-            $em->flush();
-            // Modufy = 1
-            $this->AddChanges($point,  $this->getParameter('modify_action_version'));
-            return $this->redirectToRoute('points_edit', array('id' => $point->getId()));
+            try{
+                $file = $point->getPicture();
+
+                if($file == null){
+                    $point->setPicture($oldImage);
+                }else{
+                    $this->get('poi.points_uploader')->delete($oldImage);
+                    $mimetype = $this->get('poi.points_uploader')->getMimeType($file);
+                    $point->setMimetype($mimetype);
+                    $fileName = $this->get('poi.points_uploader')->upload($file);
+                    $point->setPicture($fileName);
+                }
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($point);
+                $em->flush();
+                $this->addFlash(
+                    'success',
+                    'Miejsce edytowane prawidłowo');
+                return $this->redirectToRoute('points_index', array('page' => 1));
+            }
+            catch (\Exception $e){
+                $this->addFlash(
+                    'error',
+                    'Błąd podczas edycji miejsca');
+            }
+        }
+        else if($editForm->isSubmitted() && !$editForm->isValid()){
+            $this->addFlash(
+                'error',
+                'Błąd podczas edycji miejsca');
+            $this->getDoctrine()->getManager()->refresh($point);
+            $editForm = $this->createForm('PoiBundle\Form\PointsType', $point);
+            return $this->render('points/edit.html.twig', array(
+                'point' => $point,
+                'edit_form' => $editForm->createView(),
+                'delete_form' => $deleteForm->createView(),
+            ));
         }
 
         return $this->render('points/edit.html.twig', array(
@@ -158,25 +142,19 @@ class PointsController extends Controller
         ));
     }
 
-    /**
-     * Blocks selected Point entity
-     *
-     */
     public function blockAction(Points $point, $page){
         try{
             $point->setUnblocked(0);
             $em = $this->getDoctrine()->getManager();
             $em->persist($point);
             $em->flush($point);
-            // Delete = 2
-            $this->AddChanges($point,  $this->getParameter('delete_action_version'));
             $this->addFlash(
                 'success',
-                'Point blocked successfully');
+                'Miejsce zablokowane prawidłowo');
         }catch(Exception $e){
             $this->addFlash(
                 'error',
-                'Can\'t block this point');
+                'Nie można zablokować tego miejsca');
         }
 
         return $this->redirectToRoute('points_index', array('page' => $page));
@@ -190,71 +168,87 @@ class PointsController extends Controller
      */
     public function promoteAction(Request $request, Points $point){
         $address = GoogleApiHelper::getGoogleAddress($point->getLatitude(), $point->getLongitude(), $this->getParameter("points_geo_language"));
-        // TODO Create new custom form file, change form name
-        $form = $this->createFormBuilder($point)
+
+        $form =  $this->createFormBuilder()
+            ->add('promote', SubmitType::class)
+            ->add('block', SubmitType::class)
             ->getForm();
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()){
-            $em = $this->getDoctrine()->getManager();
-            $point->setAccept($em->getRepository('PoiBundle:Administrators')->find($this->getUser()->getId()));
-            $point->setAccepted(true);
-            $em->persist($point);
-            $em->flush();
-            // Add = 0
-            $this->AddChanges($point,  $this->getParameter('add_action_version'));
+        if ($form->isSubmitted() && $form->isValid()) {
 
-            return $this->redirectToRoute('points_edit', array('id' => $point->getId()));
+            if($form->get('promote')->isClicked()){
+                $em = $this->getDoctrine()->getManager();
+                $point->setAccept($em->getRepository('PoiBundle:Administrators')->find($this->getUser()->getId()));
+                $point->setAccepted(true);
+                $em->persist($point);
+                $em->flush();
+                $this->addFlash(
+                    'success',
+                    'Miejsce zostało zatwierdzone poprawnie');
+            }
+            else{
+                $em = $this->getDoctrine()->getManager();
+                $point->setAccept($em->getRepository('PoiBundle:Administrators')->find($this->getUser()->getId()));
+                $point->setAccepted(true);
+                $point->setUnblocked(false);
+                $em->persist($point);
+                $em->flush();
+                $this->addFlash(
+                    'success',
+                    'Miejsce zostało zablokowane poprawnie');
+            }
+
+            return $this->redirectToRoute('points_index', array('page' => 1));
         }
+
+        $nearPoints = $this->getDoctrine()->getRepository('PoiBundle:Points')->findByDistanceResult($point->getLatitude(), $point->getLongitude(), 100);
 
         return $this->render('points/promote.html.twig', array(
             'point' => $point,
             'address' => $address,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'near_points' => $nearPoints
         ));
     }
 
-    /**
-     * Unblocks selected Point entity
-     *
-     */
     public function unblockAction(Points $point, $page){
         try{
             $point->setUnblocked(1);
             $em = $this->getDoctrine()->getManager();
             $em->persist($point);
             $em->flush($point);
-            // Add = 0
-            $this->AddChanges($point,  $this->getParameter('add_action_version'));
             $this->addFlash(
                 'success',
-                'Point unblocked successfully');
+                'Miejsce odblokowane prawidłowo');
         }catch(Exception $e){
             $this->addFlash(
                 'error',
-                'Can\'t unblock this point');
+                'Nie można odblokować tego miejsca');
         }
 
         return $this->redirectToRoute('points_index', array('page' => $page));
     }
 
-    /**
-     * Deletes a Points entity.
-     *
-     */
     public function deleteAction(Request $request, Points $point)
     {
         $form = $this->createDeleteForm($point);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($point);
-            $em->flush();
-            // Delete = 2
-            $this->AddChanges($point,  $this->getParameter('delete_action_version'));
-        }
+            try{
+                $em = $this->getDoctrine()->getManager();
+                $em->remove($point);
+                $em->flush();
+            }
+            catch (\Exception $e){
 
+                $this->addFlash(
+                    'error',
+                    'Nie można usunąć miejsca o nr. ID: '.$point->getId());
+                return $this->redirectToRoute('points_index');
+            }
+        }
         return $this->redirectToRoute('points_index');
     }
 
@@ -267,55 +261,10 @@ class PointsController extends Controller
      */
     private function createDeleteForm(Points $point)
     {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('points_delete', array('id' => $point->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
+            return $this->createFormBuilder()
+                ->setAction($this->generateUrl('points_delete', array('id' => $point->getId())))
+                ->setMethod('DELETE')
+                ->getForm();
     }
 
-    public function GetCurrentVersionAddIfFull(){
-        $em = $this->getDoctrine()->getManager();
-        $latest = $em->getRepository('PoiBundle:Versions')->findLatestResult();
-        if(empty($latest)){
-            $version = new Versions();
-            $version->setAddeddate(new \DateTime());
-            $version->setMembers(0);
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($version);
-            $em->flush();
-            return $em->getRepository('PoiBundle:Versions')->findLatestResult();
-        }
-        else{
-            $control = $em->getRepository('PoiBundle:Control')->find(1);
-            if($latest->getMembers() < $control->getTonextversion()){
-                return $latest;
-            }
-            else{
-                $version = new Versions();
-                $version->setAddeddate(new \DateTime());
-                $version->setMembers(0);
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($version);
-                $em->flush();
-                return $em->getRepository('PoiBundle:Versions')->findLatestResult();
-            }
-        }
-    }
-
-    public function AddChanges($point, $actionType){
-        $change = new Changes();
-        $currentVersion = $this->GetCurrentVersionAddIfFull();
-        $members = $currentVersion->getMembers();
-        $members++;
-        $currentVersion->setMembers($members);
-        $change->setPoint($point);
-        $change->setVersion($currentVersion);
-        $change->setDate(new \DateTime());
-        $change->setActiontype($actionType);
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($change);
-        $em->persist($currentVersion);
-        $em->flush();
-    }
 }

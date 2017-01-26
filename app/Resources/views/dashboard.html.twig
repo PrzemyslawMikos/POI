@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 
 <head>
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="Panel administratora dla aplikacji mobilnej 'Znajdz to!'">
+    <meta name="author" content="Przemysław Mikos">
 
-    <title>POI - Admin Page</title>
+    <title>Znajdz To! Panel administratora</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="{{ asset('bundles/dashboard/bower_components/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
@@ -38,8 +38,6 @@
 <body onLoad="showHowManyPoints('{{ path("main_ajax") }}', 'newPoints')">
 
 <div id="wrapper">
-
-    <!-- Navigation -->
     <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -48,16 +46,12 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            {# TODO change to logo image#}
             <a class="navbar-brand" href="{{ path('main_index') }}">
                 <img class="logo-top-left" src="{{ asset('images/Logo_d_w.png') }}" />
-                <div class="logo-text">POI Adventure</div>
+                <div class="logo-text">Znajdz to!</div>
             </a>
         </div>
-        <!-- /.navbar-header -->
-
         <ul class="nav navbar-top-links navbar-right">
-            <!-- /.dropdown -->
             <li>
                 <a class="href-green" onclick="showHowManyPoints('{{ path("main_ajax") }}', 'newPoints')">
                     <i class="fa fa-refresh fa-fw"></i>
@@ -107,9 +101,7 @@
                         </a>
                     </li>
                 </ul>
-                <!-- /.dropdown-tasks -->
             </li>
-            <!-- /.dropdown -->
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                     <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
@@ -121,148 +113,100 @@
                         </li>
                         <li class="divider"></li>
                         <li>
-                            <a href="{{ path('administrators_show', { 'id' : app.user.id}) }}"><i class="fa fa-gear fa-fw"></i>Your settings</a>
+                            <a href="{{ path('administrators_show', { 'id' : app.user.id}) }}"><i class="fa fa-gear fa-fw"></i> Twoje dane</a>
                         </li>
                         <li class="divider"></li>
                         <li>
-                            <a href="{{ path('logout') }}"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                            <a href="{{ path('logout') }}"><i class="fa fa-sign-out fa-fw"></i> Wyloguj</a>
                         </li>
                     {% endif %}
                 </ul>
-                <!-- /.dropdown-user -->
             </li>
-            <!-- /.dropdown -->
         </ul>
-        <!-- /.navbar-top-links -->
-
         <div class="navbar-default sidebar" role="navigation">
             <div class="sidebar-nav navbar-collapse">
                 <ul class="nav" id="side-menu">
                     <li class="sidebar-search">
-                        <div class="input-group custom-search-form">
-                            <input type="text" class="form-control" placeholder="Search for POI...">
-                            <span class="input-group-btn">
-                                    <button class="btn btn-default" type="button">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </span>
-                        </div>
-                        <!-- /input-group -->
+                        {{ render(controller('PoiBundle:Main:search')) }}
                     </li>
                     <li>
-                        <a href="{{ path('main_index') }}"><i class="fa fa-desktop fa-fw"></i> Dashboard</a>
+                        <a href="{{ path('main_index') }}"><i class="fa fa-desktop fa-fw"></i> Główny panel</a>
                     </li>
                     <li>
-                        <a href="#"><i class="fa fa-map-marker fa-fw"></i> Points<span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-map-marker fa-fw"></i> Miejsca<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
-                                <a href="{{ path('points_index') }}"><i class="fa fa-list fa-fw"></i> View all</a>
+                                <a href="{{ path('points_index') }}"><i class="fa fa-list fa-fw"></i> Wszystkie</a>
                             </li>
                             <li>
-                                <a href="{{ path('points_enabled') }}"><i class="fa fa-check fa-fw"></i> Enabled</a>
+                                <a href="{{ path('points_enabled') }}"><i class="fa fa-check fa-fw"></i> Aktywne</a>
                             </li>
                             <li>
-                                <a href="{{ path('points_disabled') }}"><i class="fa fa-ban fa-fw"></i> Blocked</a>
+                                <a href="{{ path('points_disabled') }}"><i class="fa fa-ban fa-fw"></i> Zablokowane</a>
                             </li>
                             <li>
-                                <a href="{{ path('points_acceptable') }}"><i class="fa fa-check-square fa-fw"></i> Acceptable</a>
+                                <a href="{{ path('points_acceptable') }}"><i class="fa fa-check-square fa-fw"></i> Do sprawdzenia</a>
                             </li>
                         </ul>
-                        <!-- /.nav-second-level -->
                     </li>
                     <li>
-                        <a href="#"><i class="fa fa-institution fa-fw"></i> Types<span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-institution fa-fw"></i> Kategorie<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
-                                <a href="{{ path('types_index') }}"><i class="fa fa-list fa-fw"></i> View all</a>
+                                <a href="{{ path('types_index') }}"><i class="fa fa-list fa-fw"></i> Wszystkie</a>
                             </li>
                             <li>
-                                <a href="{{ path('types_new') }}"><i class="fa fa-plus fa-fw"></i> Add</a>
+                                <a href="{{ path('types_new') }}"><i class="fa fa-plus fa-fw"></i> Dodaj</a>
                             </li>
                         </ul>
-                        <!-- /.nav-second-level -->
                     </li>
                     <li>
-                        <a href="#"><i class="fa fa-code-fork fa-fw"></i> Versions<span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-users fa-fw"></i> Użytkownicy<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
-                                <a href="{{ path('versions_index') }}"><i class="fa fa-list fa-fw"></i> View all</a>
-                            </li>
-                            <li>
-                                <a href="{{ path('control_index') }}"><i class="fa fa-cog fa-fw"></i> Settings</a>
-                            </li>
-                        </ul>
-                        <!-- /.nav-second-level -->
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-star-half-o fa-fw"></i> Ratings<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="{{ path('ratings_index') }}"><i class="fa fa-list fa-fw"></i> View all</a>
-                            </li>
-                            <li>
-                                <a href="panels-wells.html"><i class="fa fa-star fa-fw"></i> Best rated</a>
-                            </li>
-                            <li>
-                                <a href="panels-wells.html"><i class="fa fa-level-up fa-fw"></i> Most rated</a>
-                            </li>
-                        </ul>
-                        <!-- /.nav-second-level -->
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-users fa-fw"></i> Users<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="#"><i class="fa fa-android fa-fw"></i> Android application<span class="fa arrow"></span></a>
+                                <a href="#"><i class="fa fa-android fa-fw"></i> Aplikacja mobilna<span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level">
                                     <li>
-                                        <a href="{{ path('users_index') }}"><i class="fa fa-list fa-fw"></i> View all</a>
+                                        <a href="{{ path('users_index') }}"><i class="fa fa-list fa-fw"></i> Wszyscy</a>
                                     </li>
                                     <li>
-                                        <a href="#"><i class="fa fa-exclamation-triangle fa-fw"></i> Warnings</a>
+                                        <a href="{{ path('users_unblocked') }}"><i class="fa fa-check fa-fw"></i> Aktywni</a>
                                     </li>
                                     <li>
-                                        <a href="#"><i class="fa fa-ban fa-fw"></i> Blocked</a>
+                                        <a href="{{ path('users_blocked') }}"><i class="fa fa-ban fa-fw"></i> Zablokowani</a>
                                     </li>
                                 </ul>
-                                <!-- /.nav-third-level -->
                             </li>
-                            <li>
-                                <a href="#"><i class="fa fa-user fa-fw"></i> Admin<span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="{{ path('administrators_index') }}"><i class="fa fa-list fa-fw"></i> View all</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('registration_admin') }}"><i class="fa fa-plus-circle fa-fw"></i> Register new</a>
-                                    </li>
-                                    <li>
-                                        {% if app.user %}
-                                        <a href="{{ path('administrators_show', { 'id' : app.user.id}) }}"><i class="fa fa-gear fa-fw"></i>Your settings</a>
-                                        {% endif %}
-                                    </li>
-                                </ul>
-                                <!-- /.nav-third-level -->
-                            </li>
+                            {% if is_granted('ROLE_MASTER_ADMIN') %}
+                                <li>
+                                    <a href="#"><i class="fa fa-user fa-fw"></i> Administratorzy<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li>
+                                            <a href="{{ path('administrators_index') }}"><i class="fa fa-list fa-fw"></i> Wszyscy</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('registration_admin') }}"><i class="fa fa-plus-circle fa-fw"></i> Zarejestruj nowego</a>
+                                        </li>
+                                        <li>
+                                            {% if app.user %}
+                                            <a href="{{ path('administrators_show', { 'id' : app.user.id}) }}"><i class="fa fa-gear fa-fw"></i>Twoje dane</a>
+                                            {% endif %}
+                                        </li>
+                                    </ul>
+                                </li>
+                            {% endif %}
                         </ul>
-                        <!-- /.nav-second-level -->
                     </li>
                 </ul>
             </div>
-            <!-- /.sidebar-collapse -->
         </div>
-        <!-- /.navbar-static-side -->
     </nav>
-
-    <!-- Page Content -->
     <div id="page-wrapper">
         <div class="container-fluid">
             {% block content %}
             {% endblock %}
         </div>
-        <!-- /.container-fluid -->
     </div>
-    <!-- /#page-wrapper -->
 
 </div>
 <!-- /#wrapper -->

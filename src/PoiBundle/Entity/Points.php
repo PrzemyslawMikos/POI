@@ -3,6 +3,7 @@
 namespace PoiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use PoiBundle\Entity\Application\PointsAndroid;
 use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Points
@@ -10,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="points", indexes={@ORM\Index(name="FK_Points_Users_idx", columns={"User_Id"}), @ORM\Index(name="FK_Points_Types_idx", columns={"Type_Id"}), @ORM\Index(name="FK_Points_Administrators_idx", columns={"Accept_Id"})})
  * @ORM\Entity(repositoryClass="PoiBundle\Repository\PointsRepository")
  */
-class Points implements \Serializable
+class Points
 {
     /**
      * @var integer
@@ -22,14 +23,14 @@ class Points implements \Serializable
     private $id;
 
     /**
-     * @var string
+     * @var double
      *
      * @ORM\Column(name="Longitude", type="decimal", precision=9, scale=6, nullable=false)
      */
     private $longitude;
 
     /**
-     * @var string
+     * @var double
      *
      * @ORM\Column(name="Latitude", type="decimal", precision=9, scale=6, nullable=false)
      */
@@ -41,6 +42,20 @@ class Points implements \Serializable
      * @ORM\Column(name="Name", type="string", length=150, nullable=false)
      */
     private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Locality", type="string", length=90, nullable=false)
+     */
+    private $locality;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Rating", type="decimal", precision=2, scale=1, nullable=true)
+     */
+    private $rating;
 
     /**
      * @var string
@@ -114,7 +129,32 @@ class Points implements \Serializable
      */
     private $user;
 
+    /**
+     * @var \Ratings
+     *
+     * @ORM\OneToMany(targetEntity="Ratings", mappedBy="point")
+     */
+    private $ratings;
 
+    public function __construct()
+    {
+    }
+
+    public static function constructPointAndroid(PointsAndroid $pointAndroid)
+    {
+        $instance = new self();
+        $instance->longitude = $pointAndroid->getLongitude();
+        $instance->latitude = $pointAndroid->getLatitude();
+        $instance->name = $pointAndroid->getName();
+        $instance->locality = $pointAndroid->getLocality();
+        $instance->description = $pointAndroid->getDescription();
+        $instance->picture = $pointAndroid->getPicture();
+        $instance->mimetype = $pointAndroid->getMimetype();
+        $instance->addeddate = new \DateTime();
+        $instance->accepted = false;
+        $instance->unblocked = true;
+        return $instance;
+    }
 
     /**
      * Set longitude
@@ -163,6 +203,29 @@ class Points implements \Serializable
     }
 
     /**
+     * Set rating
+     *
+     * @param string $rating
+     * @return Points
+     */
+    public function setRating($rating)
+    {
+        $this->rating = $rating;
+
+        return $this;
+    }
+
+    /**
+     * Get rating
+     *
+     * @return string
+     */
+    public function getRating()
+    {
+        return $this->rating;
+    }
+
+    /**
      * Set name
      *
      * @param string $name
@@ -183,6 +246,29 @@ class Points implements \Serializable
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set locality
+     *
+     * @param string $locality
+     * @return Points
+     */
+    public function setLocality($locality)
+    {
+
+        $this->locality = $locality;
+        return $this;
+    }
+
+    /**
+     * Get locality
+     *
+     * @return string
+     */
+    public function getLocality()
+    {
+        return $this->locality;
     }
 
     /**
@@ -403,47 +489,21 @@ class Points implements \Serializable
     }
 
     /**
-     * String representation of object
-     * @link http://php.net/manual/en/serializable.serialize.php
-     * @return string the string representation of the object or null
-     * @since 5.1.0
+     * @return Ratings
      */
-    public function serialize()
+    public function getRatings()
     {
-        return serialize(array(
-            $this->id,
-            $this->user,
-            $this->type,
-            $this->longitude,
-            $this->latitude,
-            $this->name,
-            $this->description,
-            $this->picture,
-            $this->addeddate,
-        ));
+        return $this->ratings;
     }
 
     /**
-     * Constructs the object
-     * @link http://php.net/manual/en/serializable.unserialize.php
-     * @param string $serialized <p>
-     * The string representation of the object.
-     * </p>
-     * @return void
-     * @since 5.1.0
+     * @param Ratings $ratings
      */
-    public function unserialize($serialized)
+    public function setRatings($ratings)
     {
-        list (
-            $this->id,
-            $this->user,
-            $this->type,
-            $this->longitude,
-            $this->latitude,
-            $this->name,
-            $this->description,
-            $this->picture,
-            $this->addeddate,
-            ) = unserialize($serialized);
+        $this->ratings = $ratings;
     }
+
+
+
 }

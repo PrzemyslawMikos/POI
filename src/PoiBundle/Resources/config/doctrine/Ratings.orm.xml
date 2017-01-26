@@ -14,7 +14,7 @@
       </options>
     </field>
     <field name="ratedate" type="datetime" column="RateDate" nullable="false"/>
-    <many-to-one field="point" target-entity="Points" fetch="LAZY">
+    <many-to-one field="point" target-entity="Points" inversed-by="ratings" fetch="LAZY">
       <join-columns>
         <join-column name="Point_Id" referenced-column-name="Id"/>
       </join-columns>

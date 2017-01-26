@@ -3,9 +3,9 @@
 {% block content %}
 <div class="container">
     {% if error %}
-        <div class="row">
+        <div class="row login-error">
             <div class="text-center flash-error">
-                {{ error.messageKey|trans(error.messageData, 'security') }}
+                Złe dane logowania
             </div>
         </div>
     {% endif %}
@@ -15,8 +15,8 @@
                 <img src="{{ asset('images/logo_d_w.png') }}" />
             </div>
             <div class="company-name">
-                <p><h3><b>POI Adventure</b></h3></p>
-                <p><h4>DASHBOARD</h4></p>
+                <p><h3><b>Znajdz to!</b></h3></p>
+                <p><h4>Panel administratora</h4></p>
             </div>
         </div>
     </div>
@@ -24,19 +24,18 @@
         <div class="col-md-4 col-md-offset-4 none-top-margin">
             <div class="login-panel panel panel-default panel-login">
                 <div class="panel-heading">
-                    <h3 class="panel-title"><i class="fa fa-unlock fa-fw"></i> Sign In</h3>
+                    <h3 class="panel-title"><i class="fa fa-unlock fa-fw"></i> Zaloguj się</h3>
                 </div>
                 <div class="panel-body">
                     <form action="{{ path('security_login') }}" method="post">
                         <fieldset>
                             <div class="form-group">
-                                <input class="form-control input-sm" placeholder="Username" name="_username" type="text" autofocus>
+                                <input class="form-control input-sm" placeholder="Nazwa użytkownika" name="_username" type="text" autofocus>
                             </div>
                             <div class="form-group">
-                                <input class="form-control input-sm" placeholder="Password" name="_password" type="password" value="">
+                                <input class="form-control input-sm" placeholder="Hasło" name="_password" type="password" value="">
                             </div>
-                            <!-- Change this to a button or input when using this as a form -->
-                            <button type="submit"class="btn btn-sm btn-primary btn-block">Login</button>
+                            <button type="submit"class="btn btn-sm btn-primary btn-block">Zaloguj</button>
                         </fieldset>
                     </form>
                 </div>
@@ -44,5 +43,4 @@
         </div>
     </div>
 </div>
-
 {% endblock %}

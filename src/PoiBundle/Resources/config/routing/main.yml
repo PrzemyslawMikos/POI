@@ -6,4 +6,9 @@ main_ajax:
 main_index:
     path:     /
     defaults: { _controller: "PoiBundle:Main:index" }
-    methods:  GET
+    methods:  [GET, POST]
+
+main_search:
+    path:     /search
+    defaults: { _controller: "PoiBundle:Main:search" }
+    methods:  [GET, POST]

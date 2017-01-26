@@ -1,0 +1,12 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h2 class="page-header"><i class="fa fa-check fa-fw"></i> Aktywni użytkownicy aplikacji Android</h2>
+        </div>
+    </div>
+    {% include 'flash/flash.html.twig' %}
+    {% include 'users/sub_users/view_table.html.twig' %}
+    {% include 'paging/paging.html.twig' with {'page':page, 'page_count':users.pageCount, 'site_path':'users_unblocked'} %}
+{% endblock %}

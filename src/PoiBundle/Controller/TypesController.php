@@ -5,15 +5,10 @@ namespace PoiBundle\Controller;
 use PoiBundle\Entity\Administrators;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
 use PoiBundle\Entity\Types;
 use PoiBundle\Form\TypesType;
 use PoiBundle\Additional\PaginationHelper;
 
-/**
- * Types controller.
- *
- */
 class TypesController extends Controller
 {
     /**
