@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Przemek
- * Date: 12.01.2017
- * Time: 19:18
- */
 
 namespace PoiBundle\Entity\Application;
-
 
 use Symfony\Component\HttpFoundation\Request;
 

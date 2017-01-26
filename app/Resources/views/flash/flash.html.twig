@@ -1,0 +1,6 @@
+{% for flash_message in app.session.flashBag.get('error') %}
+    {% include 'flash/error.html.twig' %}
+{% endfor %}
+{% for flash_message in app.session.flashBag.get('success') %}
+    {% include 'flash/success.html.twig' %}
+{% endfor %}

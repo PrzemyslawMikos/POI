@@ -14,14 +14,11 @@ parameters:
     type_index_elements: 9
     administrators_index_elements: 20
     points_index_elements: 20
+    users_index_elements: 20
     # Table counts
     main_index_tables: 5
     # Points google geo language
     points_geo_language: 'en'
-    # Version control actions
-    add_action_version: 0
-    modify_action_version: 1
-    delete_action_version: 2
 
 framework:
     #esi:             ~
@@ -98,6 +95,8 @@ fos_rest:
         templating_formats:
             html: true
         view_response_listener: 'force'
+        mime_types:
+            json: ['application/json; charset=UTF-8', 'application/json']
         formats:
           json: true
     format_listener:

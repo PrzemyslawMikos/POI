@@ -1,0 +1,64 @@
+{% if users|length > 0 %}
+    <div class="row">
+        <div class="table-responsive view-table">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Id</th>
+                    <th>Nick</th>
+                    <th>Nazwa użytkownika</th>
+                    <th>E-mail</th>
+                    <th>Data dołączenia</th>
+                    <th>Opcje</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for user in users %}
+                    {% if user.unblocked %}
+                        <tr class="success">
+                    {% else %}
+                        <tr class="danger">
+                    {% endif %}
+                    <td>
+                        {% if user.unblocked %}
+                            <i class="fa fa-check fa-fw"></i> Aktywny
+                        {% else %}
+                            <i class="fa fa-ban fa-fw"></i> Zablokowany
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ user.id }}
+                    </td>
+                    <td>
+                        {{ user.nickname}}
+                    </td>
+                    <td>
+                        {{ user.username }}
+                    </td>
+                    <td>
+                        {{ user.email }}
+                    </td>
+                    <td>
+                        {{ user.creationdate|date('Y-m-d') }}
+                    </td>
+                    <td>
+                        <a href="{{ path('users_show', { 'id': user.id }) }}"><button type="button" class="btn btn-xs btn-default action-btn"><i class="fa fa-archive"></i></button></a>
+                        <a href="{{ path('users_edit', { 'id': user.id }) }}"><button type="button" class="btn btn-xs btn-default action-btn"><i class="fa fa-pencil"></i></button></a>
+                        {% if user.unblocked %}
+                            <a href="{{ path('users_block', { 'id': user.id, 'page' : page }) }}"><button type="button" class="btn btn-xs btn-default action-btn"><i class="fa fa-lock"></i></button></a>
+                        {% else %}
+                            <a href="{{ path('users_unblock', { 'id': user.id, 'page' : page }) }}"><button type="button" class="btn btn-xs btn-default action-btn"><i class="fa fa-unlock"></i></button></a>
+                        {% endif %}
+                    </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% else %}
+    <div class="h3 text-center">
+        Brak wyników
+    </div>
+{% endif %}

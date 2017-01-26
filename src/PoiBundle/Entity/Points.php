@@ -23,14 +23,14 @@ class Points
     private $id;
 
     /**
-     * @var string
+     * @var double
      *
      * @ORM\Column(name="Longitude", type="decimal", precision=9, scale=6, nullable=false)
      */
     private $longitude;
 
     /**
-     * @var string
+     * @var double
      *
      * @ORM\Column(name="Latitude", type="decimal", precision=9, scale=6, nullable=false)
      */
@@ -129,6 +129,12 @@ class Points
      */
     private $user;
 
+    /**
+     * @var \Ratings
+     *
+     * @ORM\OneToMany(targetEntity="Ratings", mappedBy="point")
+     */
+    private $ratings;
 
     public function __construct()
     {
@@ -481,5 +487,23 @@ class Points
     {
         return $this->user;
     }
+
+    /**
+     * @return Ratings
+     */
+    public function getRatings()
+    {
+        return $this->ratings;
+    }
+
+    /**
+     * @param Ratings $ratings
+     */
+    public function setRatings($ratings)
+    {
+        $this->ratings = $ratings;
+    }
+
+
 
 }

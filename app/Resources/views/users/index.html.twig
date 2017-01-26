@@ -3,89 +3,10 @@
 {% block content %}
     <div class="row">
         <div class="col-lg-12">
-            <h2 class="page-header"><i class="fa fa-list fa-fw"></i> All Android Users</h2>
+            <h2 class="page-header"><i class="fa fa-list fa-fw"></i> Wszyscy użytkownicy aplikacji Android</h2>
         </div>
     </div>
-    {% for flash_message in app.session.flashBag.get('error') %}
-        {% include 'flash/error.html.twig' %}
-    {% endfor %}
-    {% for flash_message in app.session.flashBag.get('success') %}
-        {% include 'flash/success.html.twig' %}
-    {% endfor %}
-    <div class="row">
-        <div class="table-responsive view-table">
-            <table class="table table-bordered">
-                <thead>
-                <tr>
-                    <th>Status</th>
-                    <th>Id</th>
-                    <th>Nickname</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Creation date</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for user in users %}
-                    {% if user.unblocked %}
-                        <tr class="success">
-                    {% else %}
-                        <tr class="danger">
-                    {% endif %}
-                    <td>
-                        {% if user.unblocked %}
-                            <i class="fa fa-check fa-fw"></i> Active
-                        {% else %}
-                            <i class="fa fa-ban fa-fw"></i> Blocked
-                        {% endif %}
-                    </td>
-                    <td>
-                        {{ user.id }}
-                    </td>
-                    <td>
-                        {{ user.nickname}}
-                    </td>
-                    <td>
-                        {{ user.username }}
-                    </td>
-                    <td>
-                        {{ user.email }}
-                    </td>
-                    <td>
-                        {{ user.creationdate|date('Y-m-d') }}
-                    </td>
-                    <td>
-                        <a href="{{ path('users_show', { 'id': user.id }) }}"><button type="button" class="btn btn-xs btn-default action-btn"><i class="fa fa-archive"></i></button></a>
-                        <a href="{{ path('users_edit', { 'id': user.id }) }}"><button type="button" class="btn btn-xs btn-default action-btn"><i class="fa fa-pencil"></i></button></a>
-                        {% if user.unblocked %}
-                           {#<a href="{{ path('user_block', { 'id': user.id, 'page' : page }) }}"><button type="button" class="btn btn-xs btn-default action-btn"><i class="fa fa-lock"></i></button></a>#}
-                        {% else %}
-                            {#<a href="{{ path('user_unblock', { 'id': user.id, 'page' : page }) }}"><button type="button" class="btn btn-xs btn-default action-btn"><i class="fa fa-unlock"></i></button></a>#}
-                        {% endif %}
-                    </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="row text-center margin-bot">
-        <div class="col-lg-12">
-            <div class="btn-group" role="group">
-                <h5>Page {{ page }} of {{ users.pageCount }}</h5>
-                {% if page != 1 %}
-                    <a href="{{ path('users_index', {'page': page-1}) }}"><button class="btn btn-sm btn-default">Prev</button></a>
-                {% else %}
-                    <a href=""><button class="btn btn-sm btn-default disabled">Prev</button></a>
-                {% endif %}
-                {% if page != users.pageCount %}
-                    <a href="{{ path('users_index', {'page': page+1}) }}"><button class="btn btn-sm btn-default">Next</button></a>
-                {% else %}
-                    <a href=""><button class="btn btn-sm btn-default disabled">Next</button></a>
-                {% endif %}
-            </div>
-        </div>
-    </div>
+    {% include 'flash/flash.html.twig' %}
+    {% include 'users/sub_users/view_table.html.twig' %}
+    {% include 'paging/paging.html.twig' with {'page':page, 'page_count':users.pageCount, 'site_path':'users_index'} %}
 {% endblock %}
-

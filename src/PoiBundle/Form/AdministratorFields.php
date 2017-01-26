@@ -1,4 +1,5 @@
 <?php
+
 namespace PoiBundle\Form;
 
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;

@@ -3,134 +3,273 @@
 {% block content %}
     <div class="row">
         <div class="col-lg-12">
-            <h2 class="page-header"><i class="fa fa-map-marker fa-fw"></i> {{ point.name }}</h2>
+            <h2 class="page-header"><i class="fa fa-map-marker fa-fw"></i> Sprawdzanie miejsca: {{ point.name }}</h2>
         </div>
     </div>
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-lg-6 text-center">
-                            <h4>Picture</h4>
-                            <img type="button" class="image-max" src="{{ asset(points_directory ~ point.picture) }}" data-toggle="modal" data-target="#img1">
-                            <div id="img1" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-                                <div class="modal-dialog modal-lg" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">×</span>
-                                            </button>
-                                            <h5 class="modal-title" id="myLargeModalLabel">{{ point.name }}</h5>
+    <div class="row scrool-row">
+        <div class="col-sm-7 scrool">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2 class="page-header"> Informacje o miejscu do sprawdzenia</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-6 text-center">
+                                    <h4>Zdjęcie</h4>
+                                    <img class="image-max" src="{{ asset(points_directory ~ point.picture) }}" data-toggle="modal" data-target="#img1">
+                                    <div id="img1" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                                        <div class="modal-dialog modal-lg" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">×</span>
+                                                    </button>
+                                                    <h5 class="modal-title" id="myLargeModalLabel">{{ point.name }}</h5>
+                                                </div>
+                                                <img class="image-point-modal" src="{{ asset(points_directory ~ point.picture) }}">
+                                            </div>
                                         </div>
-                                        <img class="image-point-modal" src="{{ asset(points_directory ~ point.picture) }}">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 ">
+                                    <h4 class="text-center">Informacje</h4>
+                                    <div class="table-responsive view-table">
+                                        <table class="table">
+                                            <tbody>
+                                            <tr>
+                                                <th>Id:</th>
+                                                <td>{{ point.id }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Nazwa:</th>
+                                                <td>{{ point.name }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Ocena:</th>
+                                                <td>{{ point.rating }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Lokalizacja:</th>
+                                                <td>{{ point.locality }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Opis:</th>
+                                                <td>{{ point.description }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Długość geo.:</th>
+                                                <td>{{ point.longitude }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Szerokość geo.:</th>
+                                                <td>{{ point.latitude }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Data dodania:</th>
+                                                <td>{{ point.addeddate|date('Y-m-d,  H:i:s') }}</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6 ">
-                            <h4 class="text-center">Informations</h4>
-                            <div class="table-responsive view-table">
-                                <table class="table">
-                                    <tbody>
-                                    <tr>
-                                        <th>Id:</th>
-                                        <td>{{ point.id }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Name:</th>
-                                        <td>{{ point.name }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Miejscowość:</th>
-                                        <td>{{ point.locality }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Description:</th>
-                                        <td>{{ point.description }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Longitude:</th>
-                                        <td>{{ point.longitude }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Latitude:</th>
-                                        <td>{{ point.latitude }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Added:</th>
-                                        <td>{{ point.addeddate|date('Y-m-d,  H:i:s') }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>MimeType:</th>
-                                        <td>{{ point.mimetype}}</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-info">
+                        <div class="panel panel-heading">
+                            <i class="fa fa-google" aria-hidden="true"></i> | Adres według Google: <b>{{ address }}</b>
+                        </div>
+                        <div class="panel panel-body map-panel">
+                            <div id="map" class="map"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-info">
+                        <div class="panel-body">
+                            <div class="col-lg-12 ">
+                                <h4 class="text-center"><a href="{{ path('users_show', {'id': point.user.id }) }}"><i class="fa fa-user fa-fw"></i> Informacje o użytkowniku</a></h4>
+                                <div class="table-responsive view-table-info">
+                                    <table class="table">
+                                        <tbody>
+                                        <tr>
+                                            <th>Nick:</th>
+                                            <td>{{ point.user.nickname}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Nazwa użytkownika:</th>
+                                            <td>{{ point.user.username }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>E-mail:</th>
+                                            <td>{{ point.user.email }}</td>
+                                        </tr>
+                                        {% if point.user.unblocked %}
+                                        <tr class="success">
+                                            <th>Status:</th>
+                                            <td><i class="fa fa-check fa-fw"></i> Aktywny</td>
+                                            {% else %}
+                                        <tr class="danger">
+                                            <th>Status:</th>
+                                            <td><i class="fa fa-ban fa-fw"></i> Zablokowany</td>
+                                            {% endif %}
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-lg-12">
-                            {{ form_start(form) }}
-
-                            <button type="submit" class="btn btn-sm btn-warning"><i class="fa fa-level-up fa-fw"></i> Promote</button>
-                            {{ form_end(form) }}
-
+                    <div class="panel panel-info">
+                        <div class="panel-body">
+                            <div class="col-lg-12 ">
+                                <h4 class="text-center"><a href="{{ path('types_show', {'id': point.type.id }) }}"><i class="fa fa-bank fa-fw"></i> Kategoria</a></h4>
+                                <div class="table-responsive view-table-info">
+                                    <table class="table">
+                                        <tbody>
+                                        <tr>
+                                            <th>Nazwa:</th>
+                                            <td>{{ point.type.name}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Opis:</th>
+                                            <td>{{ point.type.description}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Data dodania:</th>
+                                            <td>{{ point.type.addeddate|date('Y-m-d,  H:i:s') }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Dodał:</th>
+                                            <td> <a href="{{ path('administrators_show', { 'id': point.type.creator.id}) }}">{{ point.type.creator.firstname }}  {{ point.type.creator.lastname }}</a></td>
+                                        </tr>
+                                        {% if point.user.unblocked %}
+                                        <tr class="success">
+                                            <th>Status:</th>
+                                            <td><i class="fa fa-check fa-fw"></i> Aktywny</td>
+                                            {% else %}
+                                        <tr class="danger">
+                                            <th>Status:</th>
+                                            <td><i class="fa fa-ban fa-fw"></i> Zablokowany</td>
+                                            {% endif %}
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-4">
-            <div class="panel panel-info">
-                <div class="panel-body">
-                    <div class="col-lg-12 ">
-                        <h4 class="text-center"><a href="{{ path('users_show', {'id': point.user.id }) }}"><i class="fa fa-user fa-fw"></i> User informations</a></h4>
-                        <div class="table-responsive view-table-info">
-                            <table class="table">
-                                <tbody>
-                                <tr>
-                                    <th>Nickname:</th>
-                                    <td>{{ point.user.nickname}}</td>
-                                </tr>
-                                <tr>
-                                    <th>Username:</th>
-                                    <td>{{ point.user.username }}</td>
-                                </tr>
-                                <tr>
-                                    <th>E-mail:</th>
-                                    <td>{{ point.user.email }}</td>
-                                </tr>
-                                {% if point.user.unblocked %}
-                                <tr class="success">
-                                    <th>Status:</th>
-                                    <td><i class="fa fa-check fa-fw"></i> Active</td>
-                                    {% else %}
-                                <tr class="danger">
-                                    <th>Status:</th>
-                                    <td><i class="fa fa-ban fa-fw"></i> Blocked</td>
-                                    {% endif %}
-                                </tr>
-                                </tbody>
-                            </table>
+        <div class="col-sm-5 scrool">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2 class="page-header"> Aktywne miejsca w promieniu (100m)</h2>
+                </div>
+            </div>
+            {% if near_points|length > 0 %}
+                {% for near_point in near_points %}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel panel-info">
+                            <div class="panel-heading text-center">
+                                {{ near_point.name }}<br/>
+                                Odległość: {{ near_point.distance }}
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12 text-center">
+                                        <h4>Zdjęcie</h4>
+                                        <img class="image-max" src="{{ asset(points_directory ~ near_point.picture) }}" data-toggle="modal" data-target="#{{ near_point.id }}">
+                                        <div id="{{ near_point.id }}" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                                            <div class="modal-dialog modal-lg" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                        <h5 class="modal-title" id="myLargeModalLabel">{{ near_point.name }}</h5>
+                                                    </div>
+                                                    <img class="image-point-modal" src="{{ asset(points_directory ~ near_point.picture) }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 ">
+                                        <h4 class="text-center">Informacje</h4>
+                                        <div class="table-responsive view-table">
+                                            <table class="table">
+                                                <tbody>
+                                                <tr>
+                                                    <th>Id:</th>
+                                                    <td>{{ near_point.id }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Nazwa:</th>
+                                                    <td>{{ near_point.name }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Ocena:</th>
+                                                    <td>{{ near_point.rating }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Lokalizacja:</th>
+                                                    <td>{{ near_point.locality }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Opis:</th>
+                                                    <td>{{ near_point.description }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Długość geo.:</th>
+                                                    <td>{{ near_point.longitude }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Szerokość geo.:</th>
+                                                    <td>{{ near_point.latitude }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Data dodania:</th>
+                                                    <td>{{ near_point.addeddate|date('Y-m-d,  H:i:s') }}</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+                {% endfor %}
+            {% else %}
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <h2>Brak wyników</h2>
+                    </div>
+                </div>
+            {% endif %}
         </div>
     </div>
-    <div class="row">
+    <hr/>
+    <div class="row margin-bot">
         <div class="col-lg-12">
-            <div class="panel panel-info">
-                <div class="panel panel-heading">
-                    <i class="fa fa-google" aria-hidden="true"></i> | Address: {{ address }}
-                </div>
-                <div class="panel panel-body map-panel">
-                    <div id="map" class="map"></div>
-                </div>
-            </div>
+            {{ form_start(form) }}
+            {{ form_widget(form.promote, {'attr' : {'class' : 'btn btn-sm btn-success'}, 'label' : 'Zatwierdź' }) }}
+            {{ form_widget(form.block, {'attr' : {'class' : 'btn btn-sm btn-danger'}, 'label' : 'Zablokuj' }) }}
+            {{ form_end(form) }}
+
         </div>
     </div>
     <script src="{{ asset('bundles/dashboard/dist/js/own_dashboard.js') }}"></script>

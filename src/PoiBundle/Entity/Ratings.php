@@ -38,7 +38,7 @@ class Ratings
     /**
      * @var \Points
      *
-     * @ORM\ManyToOne(targetEntity="Points")
+     * @ORM\ManyToOne(targetEntity="Points", inversedBy="ratings")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="Point_Id", referencedColumnName="Id")
      * })

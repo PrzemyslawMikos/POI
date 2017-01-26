@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Przemek
- * Date: 05.01.2017
- * Time: 18:52
- */
 
 namespace PoiBundle\Additional;
-
 
 class RestConstants
 {

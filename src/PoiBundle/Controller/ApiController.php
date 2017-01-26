@@ -146,7 +146,7 @@ class ApiController extends FOSRestController
     {
         try{
             $pointAndroid = PointsAndroid::constructRequest($request);
-            $fileName = $this->get('poi.points_uploader')->upload($pointAndroid->getPicture(), $pointAndroid->getMimetype());
+            $fileName = $this->get('poi.points64_uploader')->upload($pointAndroid->getPicture(), $pointAndroid->getMimetype());
             $pointAndroid->setPicture($fileName);
             $point = Points::constructPointAndroid($pointAndroid);
             $point->setType($this->getDoctrine()->getManager()->getRepository('PoiBundle:Types')->find($pointAndroid->getTypeid()));
@@ -196,10 +196,29 @@ class ApiController extends FOSRestController
         }
     }
 
-    //TODO dodać więcej opcji filtrowania!
+    /**
+     * Zwraca typ o podanym id
+     *
+     * @Get("/types/{typeid}")
+     */
+    public function getTypeByIdAction($typeid){
+        try{
+            $type = $this->getDoctrine()->getRepository('PoiBundle:Types')->find($typeid);
+            if ($type === null) {
+                return new JsonResponse([RestConstants::STATUS => RestConstants::STATUS_NOT_FOUND], Response::HTTP_NOT_FOUND);
+            }
+            $typeAndroid = TypesAndroid::constructType($type);
+            return $typeAndroid;
+        }
+        catch (\Exception $e){
+            return new JsonResponse([RestConstants::STATUS => RestConstants::STATUS_INTERNAL_SERVER_ERROR], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
     /**
      * Zwraca punkty z odpowiednimi wymaganiami
-     * Jeśli locality == '*' znajedzie wszystkie punkty danego typu niezależnie od miejscowośći
+     * Jeśli locality === '*' znajedzie wszystkie punkty danego typu niezależnie od miejscowośći
+     * Jeśli typeid == 0 znajdzie wszystkie punkty o podanej lokalizacji niezależnie od typu
      *
      * @Get("/points/{typeid}/{locality}/{limit}/{offset}")
      */
@@ -209,7 +228,12 @@ class ApiController extends FOSRestController
             if($locality === '*'){
                 $locality = '%';
             }
-            $points = $this->getDoctrine()->getRepository('PoiBundle:Points')->findByCriteriaRestResult($typeid, $locality, $limit, $offset);
+            if($typeid == 0){
+                $points = $this->getDoctrine()->getRepository('PoiBundle:Points')->findByCriteriaRestNoTypeResult($locality, $limit, $offset);
+            }
+            else{
+                $points = $this->getDoctrine()->getRepository('PoiBundle:Points')->findByCriteriaRestResult($typeid, $locality, $limit, $offset);
+            }
             if (!isset($points) or empty($points) or is_null($points)) {
                 return new JsonResponse([RestConstants::STATUS => RestConstants::STATUS_NOT_FOUND], Response::HTTP_NOT_FOUND);
             }
@@ -226,13 +250,14 @@ class ApiController extends FOSRestController
             return new JsonResponse([RestConstants::STATUS => RestConstants::STATUS_INTERNAL_SERVER_ERROR], Response::HTTP_BAD_REQUEST);
         }
     }
+
     /**
      * Zwraca punkty z zakresu odległości
      *
      * @Get("/points/{userLatitude}/{userLongitude}/{distance}")
      */
     public function getPointsByDistanceAction($userLatitude, $userLongitude, $distance){
-        //try {
+        try {
             $points = $this->getDoctrine()->getRepository('PoiBundle:Points')->findByDistanceResult($userLatitude, $userLongitude, $distance);
             if (!isset($points) or empty($points) or is_null($points)) {
                 return new JsonResponse([RestConstants::STATUS => RestConstants::STATUS_NOT_FOUND], Response::HTTP_NOT_FOUND);
@@ -240,10 +265,10 @@ class ApiController extends FOSRestController
             else{
                 return $points;
             }
-//        }
-//        catch (\Exception $e){
-//            return new JsonResponse([RestConstants::STATUS => RestConstants::STATUS_INTERNAL_SERVER_ERROR], Response::HTTP_BAD_REQUEST);
-//        }
+        }
+        catch (\Exception $e){
+            return new JsonResponse([RestConstants::STATUS => RestConstants::STATUS_INTERNAL_SERVER_ERROR], Response::HTTP_BAD_REQUEST);
+        }
     }
 
     /**

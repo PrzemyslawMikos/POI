@@ -1,0 +1,39 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h2 class="page-header text-center"><i class="fa fa-search fa-fw"></i> Wyniki wyszukiwania dla klucza: <b>{{ search_value }}</b></h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 page-header search-head">
+            <div>
+                <i class="fa fa-map-marker fa-fw"></i> Miejsca - {{ points|length }}
+            </div>
+            <div class="text-expand" role="button" data-toggle="collapse" href="#collapsePoints">
+                <i class="fa fa-caret-down" aria-hidden="true"></i>   Rozwiń
+            </div>
+        </div>
+    </div>
+    <div class="collapse pre-scrollable" id="collapsePoints">
+        <div class="col-lg-12">
+            {% include 'points/sub_points/view_table.html.twig' with {'page':1} %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 page-header search-head">
+            <div>
+                <i class="fa fa-user fa-fw"></i> Użytkownicy - {{ users|length }}
+            </div>
+            <div class="text-expand" role="button" data-toggle="collapse" href="#collapseUsers">
+                <i class="fa fa-caret-down" aria-hidden="true"></i>   Rozwiń
+            </div>
+        </div>
+    </div>
+    <div class="collapse pre-scrollable" id="collapseUsers">
+        <div class="col-lg-12">
+            {% include 'users/sub_users/view_table.html.twig' with {'page':1} %}
+        </div>
+    </div>
+{% endblock %}

@@ -22,3 +22,23 @@ users_delete:
     path:     /{id}/delete
     defaults: { _controller: "PoiBundle:Users:delete" }
     methods:  DELETE
+
+users_block:
+    path:     /{id}/{page}/block
+    defaults: { _controller: "PoiBundle:Users:block", page: 1 }
+    methods:  [GET]
+
+users_unblock:
+    path:     /{id}/{page}/unblock
+    defaults: { _controller: "PoiBundle:Users:unblock", page: 1 }
+    methods:  [GET]
+
+users_blocked:
+    path:     /{page}/blocked
+    defaults: { _controller: "PoiBundle:Users:blocked", page: 1 }
+    methods:  [GET, POST]
+
+users_unblocked:
+    path:     /{page}/unblocked
+    defaults: { _controller: "PoiBundle:Users:unblocked", page: 1 }
+    methods:  [GET, POST]

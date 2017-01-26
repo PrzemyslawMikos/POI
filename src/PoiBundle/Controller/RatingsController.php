@@ -4,14 +4,9 @@ namespace PoiBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
 use PoiBundle\Entity\Ratings;
 use PoiBundle\Form\RatingsType;
 
-/**
- * Ratings controller.
- *
- */
 class RatingsController extends Controller
 {
     /**

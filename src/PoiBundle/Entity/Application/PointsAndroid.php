@@ -5,9 +5,7 @@ namespace PoiBundle\Entity\Application;
 use PoiBundle\Entity\Points;
 use Symfony\Component\HttpFoundation\Request;
 use JMS\Serializer\Annotation\Type;
-/**
- * Points Android class
- */
+
 class PointsAndroid
 {
     private $id;

@@ -1,21 +1,67 @@
 {% extends 'dashboard.html.twig' %}
 
+
 {% block content %}
-    <h1>Points edit</h1>
+    <div class="row">
+        <div class="col-lg-12">
+            <h2 class="page-header"><i class="fa fa-pencil fa-fw"></i> Edycja miejsca</h2>
+        </div>
+    </div>
+    {% include 'flash/flash.html.twig' %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    {{ form_start(edit_form) }}
+                    <div class="form-group">
+                        {{ form_label(edit_form.name, 'Nazwa miejsca') }}
+                        {{ form_widget(edit_form.name, {'attr' : {'class' : 'form-control input-sm'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(edit_form.description, 'Opis') }}
+                        {{ form_widget(edit_form.description, {'attr' : {'class' : 'form-control input-sm'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(edit_form.locality, 'Lokalizacja') }}
+                        {{ form_widget(edit_form.locality, {'attr' : {'class' : 'form-control input-sm'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(edit_form.type, 'Kategoria') }}
+                        {{ form_widget(edit_form.type, {'attr' : {'class' : 'form-control input-sm'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(edit_form.longitude, 'Długość geograficzna') }}
+                        {{ form_widget(edit_form.longitude, {'attr' : {'class' : 'form-control input-sm'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(edit_form.latitude, 'Szerokość geograficzna') }}
+                        {{ form_widget(edit_form.latitude, {'attr' : {'class' : 'form-control input-sm'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(edit_form.picture, 'Zdjęcie') }}
+                        <p class="alert alert-info">Stare zdjęcie zostanie zastąpione nowym, tylko gdy zostanie wybrane!</p>
+                        <div class="row">
+                            <div class="col-lg-12 margin-bot text-center">
+                                <img class="image-max" src="{{ asset(points_directory ~ point.picture) }}" />
+                            </div>
+                        </div>
+                        {{ form_widget(edit_form.picture, {'attr' : {'class' : 'filestyle', 'data-icon' : 'false', 'data-buttonBefore' : 'true'}}) }}
+                    </div>
+                    <div class="form-group multiple-forms-buttons">
+                        <a href="{{ path('points_index', { 'page' : 1 }) }}"><button type="button" class="btn btn-sm btn-default"><i class="fa fa-reply"></i> Wszystkie</button></a>
+                        <button class="btn btn-sm btn-primary btn-df multiple-center-button" type="submit"><i class="fa fa-check fa-fw"></i> Zapisz</button>
+                        {{ form_end(edit_form)}}
 
-    {{ form_start(edit_form) }}
-        {{ form_widget(edit_form) }}
-        <input type="submit" value="Edit" />
-    {{ form_end(edit_form) }}
-
-    <ul>
-        <li>
-            <a href="{{ path('points_index') }}">Back to the list</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
+                        {{ form_start(delete_form)}}
+                        <button type="submit" class="btn btn-sm btn-danger"><i class="fa fa-times fa-fw"></i> Usuń</button>
+                        {{ form_end(delete_form) }}
+                    </div>
+                    {% if point.unblocked == false %}
+                        <a href="{{ path('points_unblock', { 'id': point.id, 'page' : 1 }) }}"><button type="button" class="btn btn-sm btn-success action-btn"><i class="fa fa-unlock"></i> Odblokuj</button></a>
+                    {% else %}
+                        <a href="{{ path('points_block', { 'id': point.id, 'page' : 1 }) }}"><button type="button" class="btn btn-sm btn-danger action-btn"><i class="fa fa-lock"></i> Zablokuj</button></a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
 {% endblock %}

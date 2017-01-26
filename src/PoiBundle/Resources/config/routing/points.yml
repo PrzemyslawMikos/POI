@@ -8,11 +8,6 @@ points_show:
     defaults: { _controller: "PoiBundle:Points:show" }
     methods:  GET
 
-points_new:
-    path:     /new
-    defaults: { _controller: "PoiBundle:Points:new" }
-    methods:  [GET, POST]
-
 points_edit:
     path:     /{id}/edit
     defaults: { _controller: "PoiBundle:Points:edit" }

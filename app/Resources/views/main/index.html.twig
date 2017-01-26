@@ -4,7 +4,7 @@
     {# Header #}
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header"><i class="fa fa-dashboard fa-fw"></i> Overall condition</h1>
+            <h1 class="page-header"><i class="fa fa-dashboard fa-fw"></i> Stan ogólny</h1>
         </div>
     </div>
     {# Status blocks #}
@@ -21,7 +21,7 @@
                             <div>
                                 {{ active_amount }}
                             </div>
-                            <div>Active working points !</div>
+                            <div>Aktywnych miejsc!</div>
                         </div>
                     </div>
                 </div>
@@ -31,8 +31,9 @@
                             <thead>
                             <tr>
                                 <th>Id</th>
-                                <th>Name</th>
-                                <th>Added</th>
+                                <th>Nazwa</th>
+                                <th>Lokalizacja</th>
+                                <th>Data dodania</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -40,6 +41,7 @@
                                 <tr>
                                     <td>{{ point.id }}</td>
                                     <td>{{ point.name }}</td>
+                                    <td>{{ point.locality }}</td>
                                     <td>{{ point.addeddate|date('Y-m-d')}}</td>
                                 </tr>
                             {% endfor %}
@@ -47,9 +49,9 @@
                         </table>
                     </div>
                 </div>
-                <a href="#">
+                <a href="{{ path('points_enabled') }}">
                     <div class="panel-footer">
-                        <span class="pull-left">See more active points</span>
+                        <span class="pull-left">Zobacz więcej aktywnych punktów...</span>
                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                         <div class="clearfix"></div>
                     </div>
@@ -68,7 +70,7 @@
                             <div>
                                 {{ users_amount }}
                             </div>
-                            <div>Registered users !</div>
+                            <div>Zarejestrowanych użytkowników!</div>
                         </div>
                     </div>
                 </div>
@@ -78,9 +80,9 @@
                             <thead>
                             <tr>
                                 <th>Id</th>
-                                <th>Nickname</th>
-                                <th>Username</th>
-                                <th>Creation Date</th>
+                                <th>Nick</th>
+                                <th>Nazwa użytkownika</th>
+                                <th>Data rejestracji</th>
                                 <th>E-mail</th>
                             </tr>
                             </thead>
@@ -97,9 +99,9 @@
                         </table>
                     </div>
                 </div>
-                <a href="#">
+                <a href="{{ path('users_index') }}">
                     <div class="panel-footer">
-                        <span class="pull-left">See more registered users</span>
+                        <span class="pull-left">Zobacz więcej zarejestrowanych użytkowników...</span>
                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                         <div class="clearfix"></div>
                     </div>
@@ -120,7 +122,7 @@
                             <div>
                                 {{ new_amount }}
                             </div>
-                            <div>New points to promote !</div>
+                            <div>Nowych punktów do sprawdzenia!</div>
                         </div>
                     </div>
                 </div>
@@ -130,8 +132,9 @@
                             <thead>
                             <tr>
                                 <th>Id</th>
-                                <th>Name</th>
-                                <th>Added</th>
+                                <th>Nazwa</th>
+                                <th>Lokalizacja</th>
+                                <th>Data dodania</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -139,6 +142,7 @@
                                 <tr>
                                     <td>{{ point.id }}</td>
                                     <td>{{ point.name }}</td>
+                                    <td>{{ point.locality }}</td>
                                     <td>{{ point.addeddate|date('Y-m-d')}}</td>
                                 </tr>
                             {% endfor %}
@@ -146,9 +150,9 @@
                         </table>
                     </div>
                 </div>
-                <a href="#">
+                <a href="{{ path('points_acceptable') }}">
                     <div class="panel-footer">
-                        <span class="pull-left">See more new points</span>
+                        <span class="pull-left">Zobacz więcej punktów do sprawdzenia...</span>
                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                         <div class="clearfix"></div>
                     </div>
@@ -167,7 +171,7 @@
                             <div>
                                 {{ blocked_amount }}
                             </div>
-                            <div>Blocked points!</div>
+                            <div>Zablokowanych punktów</div>
                         </div>
                     </div>
                 </div>
@@ -177,8 +181,9 @@
                             <thead>
                             <tr>
                                 <th>Id</th>
-                                <th>Name</th>
-                                <th>Added</th>
+                                <th>Nazwa</th>
+                                <th>Lokalizacja</th>
+                                <th>Data dodania</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -186,6 +191,7 @@
                                 <tr>
                                     <td>{{ point.id }}</td>
                                     <td>{{ point.name }}</td>
+                                    <td>{{ point.locality }}</td>
                                     <td>{{ point.addeddate|date('Y-m-d')}}</td>
                                 </tr>
                             {% endfor %}
@@ -193,9 +199,9 @@
                         </table>
                     </div>
                 </div>
-                <a href="#">
+                <a href="{{ path('points_disabled') }}">
                     <div class="panel-footer">
-                        <span class="pull-left">See more blocked points</span>
+                        <span class="pull-left">Zobacz więcej zablokowanych punktów...</span>
                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                         <div class="clearfix"></div>
                     </div>
@@ -206,7 +212,7 @@
     {# Header #}
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header"><i class="fa fa-user fa-fw"></i> Your assets</h1>
+            <h1 class="page-header"><i class="fa fa-user fa-fw"></i> Sprawdzone przez Ciebie</h1>
         </div>
     </div>
     {# Admin blocks #}
@@ -222,7 +228,7 @@
                             <div>
                                 {{ admin_amount }}
                             </div>
-                            <div>Points accepted by You !</div>
+                            <div>Ostatnio zatwierdzone przez Ciebie miejsca!</div>
                         </div>
                     </div>
                 </div>
@@ -230,13 +236,13 @@
                     <div class="table-responsive">
                         <table class="table view-table">
                             <thead>
-                            <tr>
-                                <th>Status</th>
-                                <th>Name</th>
-                                <th>Description</th>
-                                <th>Added</th>
-                                <th>Id</th>
-                            </tr>
+                                <tr>
+                                    <th>Status</th>
+                                    <th>Id</th>
+                                    <th>Nazwa</th>
+                                    <th>Lokalizacja</th>
+                                    <th>Data dodania</th>
+                                </tr>
                             </thead>
                             <tbody>
                             {% for point in admin_points %}
@@ -247,23 +253,16 @@
                                     <tr class="danger">
                                     <td><i class="fa fa-ban fa-fw"></i></td>
                                 {% endif %}
-                                    <td>{{ point.name }}</td>
-                                    <td>{{ point.description }}</td>
-                                    <td>{{ point.addeddate|date('Y-m-d')}}</td>
-                                    <td>{{ point.id }}</td>
+                                <td><a href="{{ path('points_show', { 'id': point.id}) }}">{{ point.id }}</a></td>
+                                <td>{{ point.name }}</td>
+                                <td>{{ point.locality }}</td>
+                                <td>{{ point.addeddate|date('Y-m-d')}}</td>
                                 </tr>
                             {% endfor %}
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <a href="#">
-                    <div class="panel-footer">
-                        <span class="pull-left">See more points accepted by You</span>
-                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                        <div class="clearfix"></div>
-                    </div>
-                </a>
             </div>
         </div>
     </div>

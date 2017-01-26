@@ -1,20 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Przemek
- * Date: 12.12.2016
- * Time: 16:37
- */
 
 namespace PoiBundle\Entity\Application;
-
 
 use PoiBundle\Entity\Users;
 use Symfony\Component\HttpFoundation\Request;
 use JMS\Serializer\Annotation\Type;
-/**
- * Users Android class
- */
+
 class UsersAndroid
 {
     private $id;

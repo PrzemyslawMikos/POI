@@ -12,10 +12,6 @@ use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
-/**
- * Users controller.
- *
- */
 class UsersController extends Controller
 {
     /**
@@ -27,7 +23,7 @@ class UsersController extends Controller
     {
         $query = $this->getDoctrine()->getRepository('PoiBundle:Users')->findAllQuery();
 
-        $paginationHelper = new PaginationHelper($query, $this->getParameter("administrators_index_elements"), $page);
+        $paginationHelper = new PaginationHelper($query, $this->getParameter("users_index_elements"), $page);
         $paginationHelper->makePagination();
 
         return $this->render('users/index.html.twig', array(
@@ -128,6 +124,74 @@ class UsersController extends Controller
             'delete_form' => $deleteForm->createView(),
         ));
     }
+
+    /**
+     * Blocks selected administrator user
+     *
+     */
+    public function blockAction(Users $user, $page){
+        $user->setUnblocked(0);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($user);
+        $em->flush();
+        $this->addFlash(
+            'success',
+            'Użytkownik zablokowany prawidłowo'
+        );
+
+        return $this->redirectToRoute('users_index', array('page' => $page));
+    }
+
+    /**
+     * Unblocks selected administrator user
+     *
+     */
+    public function unblockAction(Users $user, $page){
+        $user->setUnblocked(1);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($user);
+        $em->flush();
+        $this->addFlash(
+            'success',
+            'Użytkownik odblokowany prawidłowo'
+        );
+        return $this->redirectToRoute('users_index', array('page' => $page));
+    }
+
+    /**
+     * Lists unblocked users entities.
+     *
+     */
+    public function unblockedAction($page = 1)
+    {
+        $query = $this->getDoctrine()->getRepository('PoiBundle:Users')->findByUnblockedQuery(1);
+
+        $paginationHelper = new PaginationHelper($query, $this->getParameter("users_index_elements"), $page);
+        $paginationHelper->makePagination();
+
+        return $this->render('users/unblocked.html.twig', array(
+            'users' => $paginationHelper,
+            'page' => $page
+        ));
+    }
+
+    /**
+     * Lists blocked users entities.
+     *
+     */
+    public function blockedAction($page = 1)
+    {
+        $query = $this->getDoctrine()->getRepository('PoiBundle:Users')->findByUnblockedQuery(0);
+
+        $paginationHelper = new PaginationHelper($query, $this->getParameter("users_index_elements"), $page);
+        $paginationHelper->makePagination();
+
+        return $this->render('users/blocked.html.twig', array(
+            'users' => $paginationHelper,
+            'page' => $page
+        ));
+    }
+
 
     /**
      * Deletes a Users entity.

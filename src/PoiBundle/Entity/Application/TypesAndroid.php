@@ -4,9 +4,7 @@ namespace PoiBundle\Entity\Application;
 
 use PoiBundle\Entity\Types;
 use JMS\Serializer\Annotation\Type;
-/**
- * Types Android class
- */
+
 class TypesAndroid
 {
     private $id;

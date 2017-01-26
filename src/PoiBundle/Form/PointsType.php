@@ -3,7 +3,6 @@
 namespace PoiBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -21,14 +20,8 @@ class PointsType extends AbstractType
             ->add('name')
             ->add('locality')
             ->add('description')
-            //->add('picture')
-            ->add('addeddate', DateType::class)
-            ->add('accepted')
-            ->add('unblocked')
-            ->add('accept')
-            ->add('type')
-            ->add('user');
-            $builder->addEventSubscriber(new PointFields());
+            ->add('picture', null, array('data_class' => null, 'required' => false))
+            ->add('type', null, array('required' => true))
         ;
     }
     

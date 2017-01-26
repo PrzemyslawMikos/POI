@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: przemyslaw.mikos
- * Date: 7/12/2016
- * Time: 10:47 AM
- */
 
 namespace PoiBundle\Additional;
 

@@ -1,0 +1,19 @@
+{% if page_count != 0 %}
+    <div class="row text-center margin-bot">
+        <div class="col-lg-12">
+            <div class="btn-group" role="group">
+                <h5>Strona {{ page }} z {{ page_count }}</h5>
+                {% if page != 1 %}
+                    <a href="{{ path(site_path, {'page': page-1}) }}"><button class="btn btn-sm btn-default">Poprzednia</button></a>
+                {% else %}
+                    <a><button class="btn btn-sm btn-default disabled">Poprzednia</button></a>
+                {% endif %}
+                {% if page != page_count %}
+                    <a href="{{ path(site_path, {'page': page+1}) }}"><button class="btn btn-sm btn-default">Następna</button></a>
+                {% else %}
+                    <a><button class="btn btn-sm btn-default disabled">Następna</button></a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endif %}

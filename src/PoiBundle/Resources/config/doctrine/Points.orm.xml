@@ -55,5 +55,6 @@
         <join-column name="User_Id" referenced-column-name="Id"/>
       </join-columns>
     </many-to-one>
+    <one-to-many target-entity="Ratings" mapped-by="point" field="ratings" fetch="LAZY"/>
   </entity>
 </doctrine-mapping>

@@ -8,11 +8,6 @@ administrators_show:
     defaults: { _controller: "PoiBundle:Administrators:show" }
     methods:  GET
 
-administrators_new:
-    path:     /new
-    defaults: { _controller: "PoiBundle:Administrators:new" }
-    methods:  [GET, POST]
-
 administrators_edit:
     path:     /{id}/edit
     defaults: { _controller: "PoiBundle:Administrators:edit" }
@@ -26,9 +21,9 @@ administrators_delete:
 administrators_block:
     path:     /{id}/{page}/block
     defaults: { _controller: "PoiBundle:Administrators:block", page: 1 }
-    methods:  [GET, POST]
+    methods:  [GET]
 
 administrators_unblock:
     path:     /{id}/{page}/unblock
     defaults: { _controller: "PoiBundle:Administrators:unblock", page: 1 }
-    methods:  [GET, POST]
+    methods:  [GET]
