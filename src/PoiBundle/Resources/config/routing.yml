@@ -30,10 +30,6 @@ poi_registration:
     resource: "@PoiBundle/Resources/config/routing/registration.yml"
     prefix: /registration
 
-poi_warnings:
-    resource: "@PoiBundle/Resources/config/routing/warnings.yml"
-    prefix: /warnings
-
 poi_api:
     resource: "@PoiBundle/Controller/ApiController.php"
     prefix: /api
