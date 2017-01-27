@@ -24,3 +24,7 @@ services:
               class: PoiBundle\Voters\AdministratorsVoter
               tags:
                   - { name: security.voter }
+
+      poi.security.login_success_handler:
+              class:  PoiBundle\Security\LoginHandler
+              arguments: ["@router"]

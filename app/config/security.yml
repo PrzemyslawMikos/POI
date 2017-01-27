@@ -53,6 +53,7 @@ security:
               login_path: security_login
               check_path: security_login
               default_target_path: /main
+              success_handler: poi.security.login_success_handler
             logout:
                 path:   /logout
                 target: /login

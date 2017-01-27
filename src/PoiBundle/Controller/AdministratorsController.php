@@ -3,6 +3,8 @@
 namespace PoiBundle\Controller;
 
 use PoiBundle\Additional\PaginationHelper;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -57,7 +59,6 @@ class AdministratorsController extends Controller
                     'Administrator edytowany prawidłowo');
 
             }catch(\Doctrine\ORM\ORMException $e){
-                var_dump("kupa");
                 $this->addFlash(
                     'error',
                     'Błąd bazy danych podczas edycji danych administratora');
@@ -78,7 +79,52 @@ class AdministratorsController extends Controller
         return $this->render('administrators/edit.html.twig', array(
             'administrator' => $administrator,
             'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'delete_form' => $deleteForm->createView()
+        ));
+    }
+//TODO naprawić error formy
+    public function changepasswordAction(Request $request, Administrators $administrator){
+        $data = array();
+        $form = $this->createFormBuilder($data)
+            ->add('oldPassword', PasswordType::class)
+            ->add('plainPassword', RepeatedType::class, array('type' => PasswordType::class))
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            try{
+                $data = $form->getData();
+                $encoder_service = $this->get('security.encoder_factory');
+                $encoder = $encoder_service->getEncoder($administrator);
+                if($encoder->isPasswordValid($administrator->getPassword(), $data['oldPassword'], $administrator->getSalt())){
+                    $password = $this->get('security.password_encoder')->encodePassword($administrator, $data['plainPassword']);
+                    $administrator->setPassword($password);
+                    $administrator->setFirstlogin(0);
+                    $em = $this->getDoctrine()->getManager();
+                    $em->persist($administrator);
+                    $em->flush();
+                    $this->addFlash(
+                        'success',
+                        'Twoje hasło zostało zmienione prawidłowo');
+                    return $this->redirectToRoute('main_index');
+                }else{
+                    $this->addFlash(
+                        'error',
+                        'Podane hasło nie jest prawidłowe');
+                }
+            }catch (\Exception $e){
+                $this->addFlash(
+                    'error',
+                    'Błąd podczas zmiany hasła');
+            }
+        }
+        elseif($form->isSubmitted() && !$form->isValid()){
+            $this->addFlash(
+                'error',
+                'Wypełnij wszystkie pola prawidłowo');
+        }
+        return $this->render('administrators/password.html.twig', array(
+            'administrator' => $administrator,
+            'form' => $form->createView(),
         ));
     }
 

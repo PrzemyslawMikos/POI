@@ -13,6 +13,11 @@ administrators_edit:
     defaults: { _controller: "PoiBundle:Administrators:edit" }
     methods:  [GET, POST]
 
+administrators_changepassword:
+    path:     /{id}/password
+    defaults: { _controller: "PoiBundle:Administrators:changepassword" }
+    methods:  [GET, POST]
+
 administrators_delete:
     path:     /{id}/delete
     defaults: { _controller: "PoiBundle:Administrators:delete" }
