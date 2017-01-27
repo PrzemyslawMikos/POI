@@ -59,7 +59,6 @@ class Roles
         return $this->name;
     }
 
-
     /**
      * Get id
      *

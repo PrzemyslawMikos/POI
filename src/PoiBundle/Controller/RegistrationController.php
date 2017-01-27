@@ -32,12 +32,21 @@ class RegistrationController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($admin);
             $em->flush();
-
+            $this->addFlash(
+                'success',
+                'Administrator został prawidłowo dodany');
             return $this->redirectToRoute('administrators_index');
         }
+        elseif ($form->isSubmitted() && !$form->isValid()){
+            $this->addFlash(
+                'error',
+                'Wypełnij formularz prawidłowymi danymi');
+            return $this->render('registration/admin.html.twig',
+                array('form' => $form->createView())
+            );
+        }
 
-        return $this->render(
-            'registration/admin.html.twig',
+        return $this->render('registration/admin.html.twig',
             array('form' => $form->createView())
         );
     }

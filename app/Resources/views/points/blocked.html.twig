@@ -6,12 +6,7 @@
             <h2 class="page-header"><i class="fa fa-ban fa-fw"></i> Zablokowane</h2>
         </div>
     </div>
-    {% for flash_message in app.session.flashBag.get('error') %}
-        {% include 'flash/error.html.twig' %}
-    {% endfor %}
-    {% for flash_message in app.session.flashBag.get('success') %}
-        {% include 'flash/success.html.twig' %}
-    {% endfor %}
+    {% include 'flash/flash.html.twig' %}
     {% include 'points/sub_points/view_table.html.twig' %}
     {% include 'paging/paging.html.twig' with {'page':page, 'page_count':points.pageCount, 'site_path':'points_disabled'} %}
 {% endblock %}

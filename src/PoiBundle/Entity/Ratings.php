@@ -55,8 +55,6 @@ class Ratings
      */
     private $user;
 
-
-
     /**
      * Set rating
      *
@@ -158,4 +156,5 @@ class Ratings
     {
         return $this->user;
     }
+
 }

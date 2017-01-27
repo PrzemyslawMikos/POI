@@ -114,8 +114,6 @@ class Administrators implements UserInterface
         $this->plainPassword = $plainPassword;
     }
 
-
-
     /**
      * Set firstname
      *
@@ -326,8 +324,6 @@ class Administrators implements UserInterface
         $this->role = $role;
     }
 
-//////////////////////////////
-
     public function getRoles()
     {
         $role = $this->getRole();
@@ -338,39 +334,24 @@ class Administrators implements UserInterface
     {
     }
 
-    /** @see \Serializable::serialize() */
     public function serialize()
     {
         return serialize(array(
             $this->id,
             $this->username,
             $this->password,
-            // see section on salt below
-            // $this->salt,
         ));
     }
 
-    /** @see \Serializable::unserialize() */
     public function unserialize($serialized)
     {
         list (
             $this->id,
             $this->username,
             $this->password,
-            // see section on salt below
-            // $this->salt
             ) = unserialize($serialized);
     }
 
-    /**
-     * Returns the salt that was originally used to encode the password.
-     *
-     * This can return null if the password was not encoded using a salt.
-     *
-     * @return string|null The salt
-     */
     public function getSalt()
-    {
-        // TODO: Implement getSalt() method.
-    }
+    {    }
 }

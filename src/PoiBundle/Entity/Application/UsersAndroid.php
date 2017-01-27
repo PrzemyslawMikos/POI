@@ -2,6 +2,7 @@
 
 namespace PoiBundle\Entity\Application;
 
+use PoiBundle\Additional\RestConstants;
 use PoiBundle\Entity\Users;
 use Symfony\Component\HttpFoundation\Request;
 use JMS\Serializer\Annotation\Type;
@@ -57,11 +58,11 @@ class UsersAndroid
         $instance->id = null;
         // Nowo stworzony użytkownik ma zwykłe uprawnienia
         $instance->permissionid = 1;
-        $instance->nickname = $request->get('nickname');
-        $instance->email = $request->get('email');
-        $instance->phone = $request->get('phone');
-        $instance->username = $request->get('username');
-        $instance->password = $request->get('password');
+        $instance->nickname = $request->get(RestConstants::JSON_NICKNAME_KEY);
+        $instance->email = $request->get(RestConstants::JSON_EMAIL_KEY);
+        $instance->phone = $request->get(RestConstants::JSON_PHONE_KEY);
+        $instance->username = $request->get(RestConstants::JSON_USERNAME_KEY);
+        $instance->password = $request->get(RestConstants::JSON_PASSWORD_KEY);
         return $instance;
     }
 

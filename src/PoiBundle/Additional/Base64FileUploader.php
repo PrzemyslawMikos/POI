@@ -2,7 +2,6 @@
 
 namespace PoiBundle\Additional;
 
-
 class Base64FileUploader
 {
     private $targetDir;

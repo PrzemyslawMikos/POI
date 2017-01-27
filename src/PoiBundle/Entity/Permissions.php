@@ -59,7 +59,6 @@ class Permissions
         return $this->name;
     }
 
-
     /**
      * Get id
      *

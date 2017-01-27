@@ -58,7 +58,7 @@ class ApiController extends FOSRestController
                     'username' => $user->getUsername(),
                     'exp' => time() + RestConstants::TOKEN_TIME_VALID
                 ]);
-            return new JsonResponse([RestConstants::JSON_TOKEN => $token, RestConstants::JSON_USER_ID => $user->getId()], Response::HTTP_OK);
+            return new JsonResponse([RestConstants::JSON_TOKEN_KEY => $token, RestConstants::JSON_USERID_KEY => $user->getId()], Response::HTTP_OK);
         }
         catch (\Exception $e){
             return new JsonResponse([RestConstants::STATUS => RestConstants::STATUS_INTERNAL_SERVER_ERROR], Response::HTTP_BAD_REQUEST);
@@ -133,6 +133,7 @@ class ApiController extends FOSRestController
 	 *  "longitude":"33.444",
 	 *  "latitude":"4.333",
 	 *  "name":"name",
+     *  "rating":"5"
 	 *  "description":"description",
 	 *  "picture":"picture",
 	 *  "mimetype":"mimetype",
@@ -173,7 +174,7 @@ class ApiController extends FOSRestController
     }
 
     /**
-     * Zwraca listę typów
+     * Zwraca listę kategorii
      *
      * @Get("/types")
      */
@@ -197,7 +198,7 @@ class ApiController extends FOSRestController
     }
 
     /**
-     * Zwraca typ o podanym id
+     * Zwraca kategorię o podanym id
      *
      * @Get("/types/{typeid}")
      */
@@ -252,7 +253,7 @@ class ApiController extends FOSRestController
     }
 
     /**
-     * Zwraca punkty z zakresu odległości
+     * Zwraca punkty z zakresu odległości w metrach
      *
      * @Get("/points/{userLatitude}/{userLongitude}/{distance}")
      */

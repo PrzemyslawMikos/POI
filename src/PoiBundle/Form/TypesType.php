@@ -20,10 +20,8 @@ class TypesType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            //->add('creatorid')
             ->add('name')
             ->add('description', TextareaType::class);
-            //->add('addeddate', DateType::class)
         $builder->addEventSubscriber(new TypeFields());
     }
     

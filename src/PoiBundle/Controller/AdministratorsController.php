@@ -9,7 +9,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use PoiBundle\Entity\Administrators;
 use PoiBundle\Form\AdministratorsType;
 
-
 class AdministratorsController extends Controller
 {
 
@@ -19,10 +18,8 @@ class AdministratorsController extends Controller
     public function indexAction($page = 1)
     {
         $query = $this->getDoctrine()->getRepository('PoiBundle:Administrators')->findAllQuery();
-
         $paginationHelper = new PaginationHelper($query, $this->getParameter("administrators_index_elements"), $page);
         $paginationHelper->makePagination();
-
         return $this->render('administrators/index.html.twig', array(
             'administrators' => $paginationHelper,
             'page' => $page,
@@ -35,7 +32,6 @@ class AdministratorsController extends Controller
     public function showAction(Administrators $administrator)
     {
         $deleteForm = $this->createDeleteForm($administrator);
-
         return $this->render('administrators/show.html.twig', array(
             'administrator' => $administrator,
             'delete_form' => $deleteForm->createView(),
@@ -52,11 +48,31 @@ class AdministratorsController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($administrator);
-            $em->flush();
+            try{
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($administrator);
+                $em->flush();
+                $this->addFlash(
+                    'success',
+                    'Administrator edytowany prawidłowo');
 
+            }catch(\Doctrine\ORM\ORMException $e){
+                var_dump("kupa");
+                $this->addFlash(
+                    'error',
+                    'Błąd bazy danych podczas edycji danych administratora');
+            }
+            catch (\Exception $e){
+                $this->addFlash(
+                    'error',
+                    'Błąd podczas edycji danych administratora');
+            }
             return $this->redirectToRoute('administrators_edit', array('id' => $administrator->getId()));
+        }
+        elseif($editForm->isSubmitted() && !$editForm->isValid()){
+            $this->addFlash(
+                'error',
+                'Wypełnij wszystkie pola prawidłowo');
         }
 
         return $this->render('administrators/edit.html.twig', array(
@@ -67,79 +83,88 @@ class AdministratorsController extends Controller
     }
 
     /**
-     * Blocks selected administrator user
-     *
+     * @Security("is_granted('EDIT', administrator)")
      */
     public function blockAction(Administrators $administrator, $page){
         $user = $this->getUser();
-        //You can't block yourself
         if($administrator->getId() === $user->getId()){
             $this->addFlash(
                 'error',
-                'You cant block yourself'
+                'Nie możesz zablokować sam siebie'
             );
         }
         else{
-            $administrator->setUnblocked(0);
+            try{
+                $administrator->setUnblocked(0);
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($administrator);
+                $em->flush();
+                $this->addFlash(
+                    'success',
+                    'Administrator zablokowany prawidłowo'
+                );
+            }catch (\Exception $e){
+                $this->addFlash(
+                    'error',
+                    'Błąd podczas blokowania administratora');
+            }
+        }
+        return $this->redirectToRoute('administrators_index', array('page' => $page));
+    }
+
+    /**
+     * @Security("is_granted('EDIT', administrator)")
+     */
+    public function unblockAction(Administrators $administrator, $page){
+        try{
+            $administrator->setUnblocked(1);
             $em = $this->getDoctrine()->getManager();
             $em->persist($administrator);
             $em->flush();
             $this->addFlash(
                 'success',
-                'Admin blocked successfully'
+                'Administrator odblokowany prawidłowo'
             );
+        }catch (\Exception $e){
+            $this->addFlash(
+                'error',
+                'Błąd podczas odblokowywania administratora');
         }
         return $this->redirectToRoute('administrators_index', array('page' => $page));
     }
 
     /**
-     * Unblocks selected administrator user
-     *
-     */
-    public function unblockAction(Administrators $administrator, $page){
-        $administrator->setUnblocked(1);
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($administrator);
-        $em->flush();
-        $this->addFlash(
-            'success',
-            'Admin unblocked successfully'
-        );
-        return $this->redirectToRoute('administrators_index', array('page' => $page));
-    }
-
-    /**
-     * Deletes a Administrators entity.
-     *
+     * @Security("is_granted('DELETE', administrator)")
      */
     public function deleteAction(Request $request, Administrators $administrator)
     {
         $form = $this->createDeleteForm($administrator);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $this->getUser();
-            //You can't delete yourself
             if($administrator->getId() === $user->getId()){
-
+                $this->addFlash(
+                    'error',
+                    'Nie możesz usunąć sam siebie');
             }
             else{
-                $em = $this->getDoctrine()->getManager();
-                $em->remove($administrator);
-                $em->flush();
+                try{
+                    $em = $this->getDoctrine()->getManager();
+                    $em->remove($administrator);
+                    $em->flush();
+                    $this->addFlash(
+                        'success',
+                        'Administrator usunięty prawidłowo');
+                }catch (\Exception $e){
+                    $this->addFlash(
+                        'error',
+                        'Błąd podczas usuwania administratora');
+                }
             }
         }
-
         return $this->redirectToRoute('administrators_index');
     }
 
-    /**
-     * Creates a form to delete a Administrators entity.
-     *
-     * @param Administrators $administrator The Administrators entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
     private function createDeleteForm(Administrators $administrator)
     {
         return $this->createFormBuilder()

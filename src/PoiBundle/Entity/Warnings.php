@@ -155,4 +155,5 @@ class Warnings
     {
         return $this->user;
     }
+
 }

@@ -504,6 +504,4 @@ class Points
         $this->ratings = $ratings;
     }
 
-
-
 }

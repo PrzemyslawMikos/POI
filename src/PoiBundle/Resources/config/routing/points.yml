@@ -47,3 +47,8 @@ points_promote:
     path:     /{id}/promote
     defaults: { _controller: "PoiBundle:Points:promote", page: 1 }
     methods:  [GET, POST]
+
+ratingdelete_delete:
+    path:     /{ratingId}/{pointId}/delete
+    defaults: { _controller: "PoiBundle:Points:ratingDelete" }
+    methods:  GET

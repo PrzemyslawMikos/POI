@@ -20,18 +20,11 @@ use Symfony\Component\Validator\Constraints\DateTime;
 class PointsController extends Controller
 {
 
-    /**
-     * Lists all Points entities.
-     * @param int $page
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
     public function indexAction($page = 1)
     {
         $query = $this->getDoctrine()->getRepository('PoiBundle:Points')->findAllQuery();
-
         $paginationHelper = new PaginationHelper($query, $this->getParameter("points_index_elements"), $page);
         $paginationHelper->makePagination();
-
         return $this->render('points/index.html.twig', array(
             'points' => $paginationHelper,
             'page' => $page
@@ -41,10 +34,8 @@ class PointsController extends Controller
     public function enabledAction($page = 1)
     {
         $query = $this->getDoctrine()->getRepository('PoiBundle:Points')->findAcceptedAndUnblockedQuery(true, true);
-
         $paginationHelper = new PaginationHelper($query, $this->getParameter("points_index_elements"), $page);
         $paginationHelper->makePagination();
-
         return $this->render('points/enabled.html.twig', array(
             'points' => $paginationHelper,
             'page' => $page
@@ -54,10 +45,8 @@ class PointsController extends Controller
     public function disabledAction($page = 1)
     {
         $query = $this->getDoctrine()->getRepository('PoiBundle:Points')->findAcceptedAndUnblockedQuery(true, false);
-
         $paginationHelper = new PaginationHelper($query, $this->getParameter("points_index_elements"), $page);
         $paginationHelper->makePagination();
-
         return $this->render('points/blocked.html.twig', array(
             'points' => $paginationHelper,
             'page' => $page
@@ -67,10 +56,8 @@ class PointsController extends Controller
     public function acceptableAction($page = 1)
     {
         $query = $this->getDoctrine()->getRepository('PoiBundle:Points')->findAcceptedAndUnblockedQuery(false, true);
-
         $paginationHelper = new PaginationHelper($query, $this->getParameter("points_index_elements"), $page);
         $paginationHelper->makePagination();
-
         return $this->render('points/acceptable.html.twig', array(
             'points' => $paginationHelper,
             'page' => $page
@@ -94,7 +81,6 @@ class PointsController extends Controller
         $editForm = $this->createForm('PoiBundle\Form\PointsType', $point);
         $oldImage = $point->getPicture();
         $editForm->handleRequest($request);
-
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             try{
                 $file = $point->getPicture();
@@ -131,7 +117,7 @@ class PointsController extends Controller
             return $this->render('points/edit.html.twig', array(
                 'point' => $point,
                 'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
+                'delete_form' => $deleteForm->createView()
             ));
         }
 
@@ -151,21 +137,31 @@ class PointsController extends Controller
             $this->addFlash(
                 'success',
                 'Miejsce zablokowane prawidłowo');
-        }catch(Exception $e){
+        }catch(\Exception $e){
             $this->addFlash(
                 'error',
                 'Nie można zablokować tego miejsca');
         }
-
         return $this->redirectToRoute('points_index', array('page' => $page));
     }
 
-    /**
-     * Promote selected Point entity
-     * @param Request $request
-     * @param Points $point
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     */
+    public function unblockAction(Points $point, $page){
+        try{
+            $point->setUnblocked(1);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($point);
+            $em->flush($point);
+            $this->addFlash(
+                'success',
+                'Miejsce odblokowane prawidłowo');
+        }catch(\Exception $e){
+            $this->addFlash(
+                'error',
+                'Nie można odblokować tego miejsca');
+        }
+        return $this->redirectToRoute('points_index', array('page' => $page));
+    }
+
     public function promoteAction(Request $request, Points $point){
         $address = GoogleApiHelper::getGoogleAddress($point->getLatitude(), $point->getLongitude(), $this->getParameter("points_geo_language"));
 
@@ -198,12 +194,9 @@ class PointsController extends Controller
                     'success',
                     'Miejsce zostało zablokowane poprawnie');
             }
-
             return $this->redirectToRoute('points_index', array('page' => 1));
         }
-
         $nearPoints = $this->getDoctrine()->getRepository('PoiBundle:Points')->findByDistanceResult($point->getLatitude(), $point->getLongitude(), 100);
-
         return $this->render('points/promote.html.twig', array(
             'point' => $point,
             'address' => $address,
@@ -212,22 +205,32 @@ class PointsController extends Controller
         ));
     }
 
-    public function unblockAction(Points $point, $page){
+    public function ratingDeleteAction($ratingId, $pointId){
         try{
-            $point->setUnblocked(1);
+            $rating = $this->getDoctrine()->getRepository('PoiBundle:Ratings')->find($ratingId);
+            $point = $this->getDoctrine()->getRepository('PoiBundle:Points')->find($pointId);
+            $address = GoogleApiHelper::getGoogleAddress($point->getLatitude(), $point->getLongitude(), $this->getParameter("points_geo_language"));
+            $deleteForm = $this->createDeleteForm($point);
             $em = $this->getDoctrine()->getManager();
-            $em->persist($point);
-            $em->flush($point);
+            $em->remove($rating);
+            $em->flush();
             $this->addFlash(
                 'success',
-                'Miejsce odblokowane prawidłowo');
-        }catch(Exception $e){
+                'Ocena została usunięta');
+            $this->recalculateRating($pointId);
+        }catch(\Exception $e){
+            $point = $this->getDoctrine()->getRepository('PoiBundle:Points')->find($pointId);
+            $address = GoogleApiHelper::getGoogleAddress($point->getLatitude(), $point->getLongitude(), $this->getParameter("points_geo_language"));
+            $deleteForm = $this->createDeleteForm($point);
             $this->addFlash(
-                'error',
-                'Nie można odblokować tego miejsca');
+                'success',
+                'Błąd podczas usuwania oceny');
         }
-
-        return $this->redirectToRoute('points_index', array('page' => $page));
+        return $this->render('points/show.html.twig', array(
+            'point' => $point,
+            'address' => $address,
+            'delete_form' => $deleteForm->createView(),
+        ));
     }
 
     public function deleteAction(Request $request, Points $point)
@@ -237,12 +240,16 @@ class PointsController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             try{
+                $picture = $point->getPicture();
                 $em = $this->getDoctrine()->getManager();
                 $em->remove($point);
                 $em->flush();
+                $this->get('poi.points_uploader')->delete($picture);
+                $this->addFlash(
+                    'success',
+                    'Miejsce zostało poprawnie usunięte');
             }
             catch (\Exception $e){
-
                 $this->addFlash(
                     'error',
                     'Nie można usunąć miejsca o nr. ID: '.$point->getId());
@@ -252,13 +259,6 @@ class PointsController extends Controller
         return $this->redirectToRoute('points_index');
     }
 
-    /**
-     * Creates a form to delete a Points entity.
-     *
-     * @param Points $point The Points entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
     private function createDeleteForm(Points $point)
     {
             return $this->createFormBuilder()
@@ -267,4 +267,12 @@ class PointsController extends Controller
                 ->getForm();
     }
 
+    private function recalculateRating($pointid){
+        $avargeRating = $this->getDoctrine()->getRepository('PoiBundle:Ratings')->getAvargeRating($pointid);
+        $point = $this->getDoctrine()->getRepository('PoiBundle:Points')->find($pointid);
+        $point->setRating($avargeRating);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($point);
+        $em->flush();
+    }
 }

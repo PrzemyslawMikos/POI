@@ -6,6 +6,7 @@
             <h2 class="page-header"><i class="fa fa-map-marker fa-fw"></i> {{ point.name }}</h2>
         </div>
     </div>
+    {% include 'flash/flash.html.twig' %}
     <div class="row">
         <div class="col-lg-8">
             <div class="panel panel-default">
@@ -63,7 +64,7 @@
                                     </tr>
                                     <tr>
                                         <th>Data dodania:</th>
-                                        <td>{{ point.addeddate|date('Y-m-d,  H:i:s') }}</td>
+                                        <td>{{ point.addeddate|date('Y-m-d, H:i:s') }}</td>
                                     </tr>
                                     <tr>
                                         <th>Format zdjęcia:</th>
@@ -139,7 +140,7 @@
                                 </tr>
                                 <tr>
                                     <th>Data dodania:</th>
-                                    <td>{{ point.type.addeddate|date('Y-m-d,  H:i:s') }}</td>
+                                    <td>{{ point.type.addeddate|date('Y-m-d, H:i:s') }}</td>
                                 </tr>
                                 <tr>
                                     <th>Dodał:</th>
@@ -187,7 +188,7 @@
                     <th>Id</th>
                     <th>Ocena</th>
                     <th>Użytkownik</th>
-                    <th>Data</th>
+                    <th>Data dodania</th>
                     <th>Opcje</th>
                 </tr>
                 </thead>
@@ -204,9 +205,11 @@
                             <a href="{{ path('users_show', { 'id': rating.user.id}) }}">{{ rating.user.nickname }}</a>
                         </td>
                         <td>
-                            {{ rating.ratedate|date('Y-m-d,  H:i:s') }}
+                            {{ rating.ratedate|date('Y-m-d, H:i:s') }}
                         </td>
-                        <td>Opcje</td>
+                        <td>
+                            <a href="{{ path('ratingdelete_delete', { 'ratingId': rating.id, 'pointId': point.id}) }}"><button type="button" class="btn btn-xs btn-default action-btn"><i class="fa fa-trash"></i></button></a>
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>

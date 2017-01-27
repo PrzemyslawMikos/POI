@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RadioType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -26,11 +27,9 @@ class AdministratorsType extends AbstractType
         $builder
             ->add('firstname', TextType::class)
             ->add('lastname', TextType::class)
-            ->add('phone', TextType::class)
+            ->add('phone', NumberType::class)
             ->add('email', EmailType::class)
             ->add('role', null, array('required' => true))
-            //->add('firstlogin')
-            //->add('unblocked')
         ;
         $builder->addEventSubscriber(new AdministratorFields());
     }

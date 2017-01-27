@@ -2,6 +2,7 @@
 
 namespace PoiBundle\Entity\Application;
 
+use PoiBundle\Additional\RestConstants;
 use PoiBundle\Entity\Points;
 use Symfony\Component\HttpFoundation\Request;
 use JMS\Serializer\Annotation\Type;
@@ -62,16 +63,16 @@ class PointsAndroid
     {
         $instance = new self();
         $instance->id = null;
-        $instance->longitude = $request->get('longitude');
-        $instance->latitude = $request->get('latitude');
-        $instance->rating = $request->get('rating');
-        $instance->name = $request->get('name');
-        $instance->locality = $request->get('locality');
-        $instance->description = $request->get('description');
-        $instance->picture = $request->get('picture');
-        $instance->mimetype = $request->get('mimetype');
-        $instance->typeid = $request->get('typeid');
-        $instance->userid = $request->get('userid');
+        $instance->longitude = $request->get(RestConstants::JSON_LONGITUDE_KEY);
+        $instance->latitude = $request->get(RestConstants::JSON_LATITUDE_KEY);
+        $instance->rating = $request->get(RestConstants::JSON_RATING_KEY);
+        $instance->name = $request->get(RestConstants::JSON_NAME_KEY);
+        $instance->locality = $request->get(RestConstants::JSON_LOCALITY_KEY);
+        $instance->description = $request->get(RestConstants::JSON_DESCRIPTION_KEY);
+        $instance->picture = $request->get(RestConstants::JSON_PICTURE_KEY);
+        $instance->mimetype = $request->get(RestConstants::JSON_MIMETYPE_KEY);
+        $instance->typeid = $request->get(RestConstants::JSON_TYPEID_KEY);
+        $instance->userid = $request->get(RestConstants::JSON_USERID_KEY);
         return $instance;
     }
 

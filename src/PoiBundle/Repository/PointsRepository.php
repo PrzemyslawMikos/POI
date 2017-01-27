@@ -141,5 +141,4 @@ class PointsRepository extends \Doctrine\ORM\EntityRepository
             return null;
         }
     }
-
 }

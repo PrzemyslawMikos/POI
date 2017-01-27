@@ -10,9 +10,9 @@ use Symfony\Component\HttpFoundation\Response;
 class MainController extends Controller
 {
 
+    //TODO obadać
     public function ajaxAction(Request $request){
         if(!$request->isXmlHttpRequest()){
-            //New points (accepted = false, unblocked = true)
             $new_amount = count($this->getDoctrine()->getRepository('PoiBundle:Points')->findBy(array('accepted' =>false)));
             return new Response($new_amount);
         } else {
@@ -22,23 +22,23 @@ class MainController extends Controller
 
     public function indexAction(){
 
-        //Active points (accepted = true, unblocked = true)
+        // Aktywne miejsca
         $active_points = $this->getDoctrine()->getRepository('PoiBundle:Points')->findBy(array('unblocked' => true, 'accepted' =>true), array(), $this->getParameter('main_index_tables'), array());
         $active_amount = count($this->getDoctrine()->getRepository('PoiBundle:Points')->findBy(array('unblocked' => true, 'accepted' =>true)));
 
-        //New points (accepted = false, unblocked = true)
+        // Nowe miejsca
         $new_points = $this->getDoctrine()->getRepository('PoiBundle:Points')->findBy(array('accepted' =>false), array(), $this->getParameter('main_index_tables'), array());
         $new_amount = count($this->getDoctrine()->getRepository('PoiBundle:Points')->findBy(array('accepted' =>false)));
 
-        //Blocked points (accepted = true, unblocked = false)
+        // Zablokowane miejsca
         $blocked_points = $this->getDoctrine()->getRepository('PoiBundle:Points')->findBy(array('unblocked' => false, 'accepted' =>true), array(), $this->getParameter('main_index_tables'), array());
         $blocked_amount = count($this->getDoctrine()->getRepository('PoiBundle:Points')->findBy(array('unblocked' => false, 'accepted' =>true)));
 
-        //Users
+        // Użytkownicy
         $users = $this->getDoctrine()->getRepository('PoiBundle:Users')->findBy(array(), array(), $this->getParameter('main_index_tables'), array());
         $users_amount = count($this->getDoctrine()->getRepository('PoiBundle:Users')->findAll());
 
-        //Admin added
+        // Zatwierdzone przez administratora
         $user = $this->getUser();
         $admin_points = $this->getDoctrine()->getRepository('PoiBundle:Points')->findBy(array('accept' => $user->getId()), array(), $this->getParameter('main_index_tables'), array());
         $admin_amount = count($this->getDoctrine()->getRepository('PoiBundle:Points')->findBy(array('accept' => $user->getId())));
@@ -61,6 +61,7 @@ class MainController extends Controller
 
     public function searchAction(Request $request){
         $data = array();
+        //TODO naprawić error
         $searchForm = $this->createFormBuilder($data)
             ->add('search_value')
             ->getForm();

@@ -11,14 +11,10 @@ use PoiBundle\Additional\PaginationHelper;
 
 class TypesController extends Controller
 {
-    /**
-     * Lists all Types entities.
-     *
-     */
+
     public function indexAction($page = 1)
     {
         $query = $this->getDoctrine()->getRepository('PoiBundle:Types')->findAllQuery();
-
         $paginationHelper = new PaginationHelper($query, $this->getParameter("type_index_elements"), $page);
         $paginationHelper->makePagination();
         return $this->render('types/index.html.twig', array(
@@ -27,10 +23,6 @@ class TypesController extends Controller
         ));
     }
 
-    /**
-     * Creates a new Types entity.
-     *
-     */
     public function newAction(Request $request)
     {
         $type = new Types();
@@ -38,108 +30,125 @@ class TypesController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $type->setAddeddate(new \DateTime());
-            $file = $type->getImage();
-            $mimetype = $this->get('poi.types_uploader')->getMimeType($file);
-            $type->setMimetype($mimetype);
-            $fileName = $this->get('poi.types_uploader')->upload($file);
-            $type->setImage($fileName);
-
-            $em = $this->getDoctrine()->getManager();
-            
-            $type->setCreator($em->getRepository('PoiBundle:Administrators')->find($this->getUser()->getId()));
-
-            $em->persist($type);
-            $em->flush();
-
-            return $this->redirectToRoute('types_show', array('id' => $type->getId()));
+            $fileName = "";
+            try{
+                $type->setAddeddate(new \DateTime());
+                $file = $type->getImage();
+                $mimetype = $this->get('poi.types_uploader')->getMimeType($file);
+                $type->setMimetype($mimetype);
+                $fileName = $this->get('poi.types_uploader')->upload($file);
+                $type->setImage($fileName);
+                $em = $this->getDoctrine()->getManager();
+                $type->setCreator($em->getRepository('PoiBundle:Administrators')->find($this->getUser()->getId()));
+                $em->persist($type);
+                $em->flush();
+                $this->addFlash(
+                    'success',
+                    'Kategoria została dodana prawidłowo');
+                return $this->redirectToRoute('types_show', array('id' => $type->getId()));
+            }catch (\Exception $e){
+                $this->get('poi.types_uploader')->delete($fileName);
+                $this->addFlash(
+                    'error',
+                    'Błąd podczas dodawania kategorii');
+                $form = $this->createForm('PoiBundle\Form\TypesType', $type);
+                return $this->render('types/new.html.twig', array(
+                    'type' => $type,
+                    'form' => $form->createView(),
+                ));
+            }
+        }elseif ($form->isSubmitted() && !$form->isValid()){
+            $this->addFlash(
+                'error',
+                'Wypełnij wszystkie pola prawidłowo');
+            $form = $this->createForm('PoiBundle\Form\TypesType', $type);
+            return $this->render('types/new.html.twig', array(
+                'type' => $type,
+                'form' => $form->createView(),
+            ));
         }
-
         return $this->render('types/new.html.twig', array(
             'type' => $type,
             'form' => $form->createView(),
         ));
     }
 
-    /**
-     * Finds and displays a Types entity.
-     *
-     */
     public function showAction(Types $type)
     {
         $deleteForm = $this->createDeleteForm($type);
-
         return $this->render('types/show.html.twig', array(
             'type' => $type,
             'delete_form' => $deleteForm->createView(),
         ));
     }
 
-    /**
-     * Displays a form to edit an existing Types entity.
-     *
-     */
     public function editAction(Request $request, Types $type)
     {
         $deleteForm = $this->createDeleteForm($type);
         $editForm = $this->createForm('PoiBundle\Form\TypesType', $type);
         $oldImage = $type->getImage();
         $editForm->handleRequest($request);
-
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $file = $type->getImage();
-
             if($file == null){
                 $type->setImage($oldImage);
-            }else{
+            }else {
                 $this->get('poi.types_uploader')->delete($oldImage);
                 $mimetype = $this->get('poi.types_uploader')->getMimeType($file);
                 $type->setMimetype($mimetype);
                 $fileName = $this->get('poi.types_uploader')->upload($file);
                 $type->setImage($fileName);
             }
-
             $em = $this->getDoctrine()->getManager();
             $em->persist($type);
             $em->flush();
-
+            $this->addFlash(
+                'success',
+                'Kategoria została edytowana prawidłowo');
             return $this->redirectToRoute('types_index');
+        }elseif ($editForm->isSubmitted() && !$editForm->isValid()){
+            $this->addFlash(
+                'error',
+                'Błąd podczas edycji kategorii');
+            $this->getDoctrine()->getManager()->refresh($type);
+            $editForm = $this->createForm('PoiBundle\Form\TypesType', $type);
+            return $this->render('points/edit.html.twig', array(
+                'type' => $type,
+                'edit_form' => $editForm->createView(),
+                'delete_form' => $deleteForm->createView()
+            ));
         }
-
         return $this->render('types/edit.html.twig', array(
             'type' => $type,
             'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'delete_form' => $deleteForm->createView()
         ));
     }
 
-    /**
-     * Deletes a Types entity.
-     *
-     */
     public function deleteAction(Request $request, Types $type)
     {
         $form = $this->createDeleteForm($type);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $this->get('poi.types_uploader')->delete($type->getImage());
-            $em->remove($type);
-            $em->flush();
+            try{
+                $image = $type->getImage();
+                $em = $this->getDoctrine()->getManager();
+                $em->remove($type);
+                $em->flush();
+                $this->get('poi.types_uploader')->delete($image);
+                $this->addFlash(
+                    'success',
+                    'Kategoria została usunięta'.$type->getId());
+            }catch (\Exception $e){
+                $this->addFlash(
+                    'error',
+                    'Nie można usunąć kategorii o nr. ID: '.$type->getId());
+                return $this->redirectToRoute('types_index');
+            }
         }
-
         return $this->redirectToRoute('types_index');
     }
 
-    /**
-     * Creates a form to delete a Types entity.
-     *
-     * @param Types $type The Types entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
     private function createDeleteForm(Types $type)
     {
         return $this->createFormBuilder()

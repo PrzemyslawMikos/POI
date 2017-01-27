@@ -8,11 +8,6 @@ users_show:
     defaults: { _controller: "PoiBundle:Users:show" }
     methods:  GET
 
-users_new:
-    path:     /new
-    defaults: { _controller: "PoiBundle:Users:new" }
-    methods:  [GET, POST]
-
 users_edit:
     path:     /{id}/edit
     defaults: { _controller: "PoiBundle:Users:edit" }

@@ -2,6 +2,7 @@
 
 namespace PoiBundle\Entity\Application;
 
+use PoiBundle\Additional\RestConstants;
 use Symfony\Component\HttpFoundation\Request;
 
 class RatingsAndroid
@@ -18,9 +19,9 @@ class RatingsAndroid
     public static function constructRequest(Request $request)
     {
         $instance = new self();
-        $instance->rating = $request->get('rating');
-        $instance->pointid = $request->get('pointid');
-        $instance->userid = $request->get('userid');
+        $instance->rating = $request->get(RestConstants::JSON_RATING_KEY);
+        $instance->pointid = $request->get(RestConstants::JSON_POINTID_KEY);
+        $instance->userid = $request->get(RestConstants::JSON_USERID_KEY);
         return $instance;
     }
 
