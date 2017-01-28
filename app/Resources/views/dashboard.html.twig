@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Panel administratora dla aplikacji mobilnej 'Znajdz to!'">
     <meta name="author" content="Przemysław Mikos">
-
+    <link rel="icon" href="{{ asset('images/favicon.ico') }}">
     <title>Znajdz To! Panel administratora</title>
 
     <!-- Bootstrap Core CSS -->
@@ -114,6 +114,9 @@
                         <li class="divider"></li>
                         <li>
                             <a href="{{ path('administrators_show', { 'id' : app.user.id}) }}"><i class="fa fa-gear fa-fw"></i> Twoje dane</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('administrators_changepassword', { 'id' : app.user.id}) }}"><i class="fa fa-lock fa-fw"></i> Zmień hasło</a>
                         </li>
                         <li class="divider"></li>
                         <li>
