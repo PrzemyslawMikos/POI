@@ -25,7 +25,20 @@
                         <p class="alert alert-info">Stare zdjęcie zostanie zastąpione nowym, tylko gdy zostanie wybrane!</p>
                         <div class="row">
                             <div class="col-lg-12 margin-bot text-center">
-                                <img class="image-max" src="{{ asset(types_directory ~ type.image) }}" />
+                                <img class="image-max" data-toggle="modal" data-target="#{{ type.id }}" src="{{ asset(types_directory ~ type.image) }}" />
+                                <div id="{{ type.id }}" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                                <h5 class="modal-title" id="myLargeModalLabel">{{ type.name }}</h5>
+                                            </div>
+                                            <img class="image-point-modal" src="{{ asset(types_directory ~ type.image) }}">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         {{ form_widget(edit_form.image, {'attr' : {'class' : 'filestyle', 'data-icon' : 'false', 'data-buttonBefore' : 'true'}}) }}

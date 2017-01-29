@@ -20,7 +20,7 @@ poi_users:
 
 poi_main:
     resource: "@PoiBundle/Resources/config/routing/main.yml"
-    prefix:   /main
+    prefix:   /
 
 poi_security:
     resource: "@PoiBundle/Resources/config/routing/security.yml"

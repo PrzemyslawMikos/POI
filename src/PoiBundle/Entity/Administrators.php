@@ -3,6 +3,7 @@
 namespace PoiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -11,7 +12,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Table(name="administrators", indexes={@ORM\Index(name="FK_Administrators_Roles_idx", columns={"Role_Id"})})
  * @ORM\Entity
  */
-class Administrators implements UserInterface
+class Administrators implements AdvancedUserInterface
 {
     /**
      * @var integer
@@ -354,4 +355,24 @@ class Administrators implements UserInterface
 
     public function getSalt()
     {    }
+
+    public function isAccountNonExpired()
+    {
+        return true;
+    }
+
+    public function isAccountNonLocked()
+    {
+        return true;
+    }
+
+    public function isCredentialsNonExpired()
+    {
+        return true;
+    }
+
+    public function isEnabled()
+    {
+        return $this->unblocked;
+    }
 }

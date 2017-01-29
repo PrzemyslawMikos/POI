@@ -241,7 +241,11 @@ class PointsController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             try{
                 $picture = $point->getPicture();
+                $ratings = $point->getRatings();
                 $em = $this->getDoctrine()->getManager();
+                foreach ($ratings as $rating){
+                    $em->remove($rating);
+                }
                 $em->remove($point);
                 $em->flush();
                 $this->get('poi.points_uploader')->delete($picture);
